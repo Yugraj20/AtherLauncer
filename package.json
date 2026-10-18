@@ -1,6 +1,6 @@
 {
   "name": "aether-launcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aesthetic Dark Obsidian Minecraft Launcher",
   "main": "src/main/main.cjs",
   "type": "commonjs",

@@ -774,7 +774,7 @@ function switchTab(tabName) {
   // Always hide edit instance page when switching main tabs
   document.getElementById('view-edit-instance')?.classList.add('hidden');
 
-  const tabs = ['instances', 'radar', 'settings'];
+  const tabs = ['instances', 'modpacks', 'radar', 'settings'];
   tabs.forEach(t => {
     const el = document.getElementById(`view-${t}`);
     const btn = document.getElementById(`nav-btn-${t}`);
@@ -789,6 +789,23 @@ function switchTab(tabName) {
   if (activeView) activeView.classList.remove('hidden');
   if (activeBtn) {
     activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition";
+  }
+}
+
+async function openModpacksFromSidebar() {
+  const inst = getActiveInstance();
+  const targetId = inst ? inst.id : (currentInstances[0]?.id || athersChoiceInstances[0]?.id);
+  if (targetId) {
+    await openEditInstancePage(targetId);
+    switchEditTab('modpacks');
+    ['instances', 'radar', 'settings'].forEach(t => {
+      const b = document.getElementById(`nav-btn-${t}`);
+      if (b) b.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition";
+    });
+    const modpackNavBtn = document.getElementById('nav-btn-modpacks');
+    if (modpackNavBtn) {
+      modpackNavBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition";
+    }
   }
 }
 
@@ -1059,7 +1076,7 @@ async function openEditInstancePage(instanceId) {
   document.getElementById('view-settings')?.classList.add('hidden');
 
   // Deactivate all sidebar nav buttons
-  ['instances', 'radar', 'settings'].forEach(t => {
+  ['instances', 'modpacks', 'radar', 'settings'].forEach(t => {
     const btn = document.getElementById(`nav-btn-${t}`);
     if (btn) btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition";
   });

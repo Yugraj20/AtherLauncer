@@ -17,6 +17,11 @@ function getActiveInstance() {
   return currentInstances[0] || null;
 }
 
+function openExternalLink(url) {
+  if (window.aether && window.aether.openUrl) {
+    window.aether.openUrl(url);
+  }
+}
 
 // ================= CUSTOM OBSIDIAN DIALOG & TOAST SYSTEM =================
 let customDialogResolver = null;

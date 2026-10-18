@@ -126,18 +126,42 @@
         </button>
       </nav>
 
-      <!-- Bottom RAM Allocation Card -->
-      <div class="hidden md:block p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
-        <div class="flex items-center justify-between text-[11px] text-slate-300 font-bold mb-1.5">
-          <span class="flex items-center space-x-1">
-            <span>⚡</span><span>ALLOCATED RAM</span>
-          </span>
-          <span id="sidebar-ram-display" class="font-mono text-emerald-400 font-bold">6.0 GB</span>
+      <!-- Bottom Section: Community Links & RAM Allocation Card -->
+      <div class="space-y-2 mt-auto">
+        <!-- Community Buttons: Buy Me a Coffee & GitHub -->
+        <div class="space-y-1.5">
+          <button onclick="openExternalLink('https://buymeacoffee.com/yugraj20')" title="Buy Me a Coffee" class="w-full flex items-center justify-center md:justify-start space-x-2.5 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-amber-600/15 hover:from-amber-500/25 hover:via-yellow-500/20 hover:to-amber-600/25 border border-amber-500/30 hover:border-amber-400/50 text-amber-300 hover:text-amber-200 text-xs font-bold transition shadow-sm shadow-amber-950/30 active:scale-95 cursor-pointer group">
+            <svg class="w-4 h-4 text-amber-400 flex-shrink-0 group-hover:scale-110 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+              <line x1="6" y1="1" x2="6" y2="4"></line>
+              <line x1="10" y1="1" x2="10" y2="4"></line>
+              <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+            <span class="hidden md:inline tracking-wide font-bold">Buy Me a Coffee</span>
+          </button>
+
+          <button onclick="openExternalLink('https://github.com/Yugraj20/AtherLauncer')" title="GitHub Repository" class="w-full flex items-center justify-center md:justify-start space-x-2.5 px-3 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-slate-500 text-slate-300 hover:text-white text-xs font-bold transition shadow-sm active:scale-95 cursor-pointer group">
+            <svg class="w-4 h-4 fill-current flex-shrink-0 group-hover:scale-110 transition" viewBox="0 0 24 24">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            <span class="hidden md:inline tracking-wide font-bold">GitHub</span>
+          </button>
         </div>
-        <input type="range" id="sidebar-ram-slider" min="2" max="16" value="6" step="1" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer mb-2">
-        <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
-          <span id="sidebar-java-vendor">JDK 21 (ZGC)</span>
-          <span class="text-emerald-400 font-bold">ACTIVE</span>
+
+        <!-- Bottom RAM Allocation Card -->
+        <div class="hidden md:block p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+          <div class="flex items-center justify-between text-[11px] text-slate-300 font-bold mb-1.5">
+            <span class="flex items-center space-x-1">
+              <span>⚡</span><span>ALLOCATED RAM</span>
+            </span>
+            <span id="sidebar-ram-display" class="font-mono text-emerald-400 font-bold">6.0 GB</span>
+          </div>
+          <input type="range" id="sidebar-ram-slider" min="2" max="16" value="6" step="1" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer mb-2">
+          <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+            <span id="sidebar-java-vendor">JDK 21 (ZGC)</span>
+            <span class="text-emerald-400 font-bold">ACTIVE</span>
+          </div>
         </div>
       </div>
     </aside>

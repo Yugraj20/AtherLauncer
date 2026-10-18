@@ -37,6 +37,7 @@ contextBridge.exposeInMainWorld('aether', {
   // OS utilities
   openFolder: (dirPath) => ipcRenderer.invoke('open-folder', dirPath),
   openUrl: (url) => ipcRenderer.invoke('open-url', url),
+  checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
   minimize: () => ipcRenderer.send('window-minimize'),
   maximize: () => ipcRenderer.send('window-maximize'),
   close: () => ipcRenderer.send('window-close'),

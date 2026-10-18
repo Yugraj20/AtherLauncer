@@ -240,3 +240,70 @@ ipcMain.handle('open-url', async (event, url) => {
   }
   return false;
 });
+
+// Secret Version Update Checker
+ipcMain.handle('check-for-updates', async () => {
+  try {
+    const https = require('https');
+    const currentVersion = app.getVersion();
+    return new Promise((resolve) => {
+      const options = {
+        hostname: 'api.github.com',
+        path: '/repos/Yugraj20/AtherLauncer/releases/latest',
+        headers: {
+          'User-Agent': 'Ather-Launcher-Secret-Update-Checker'
+        }
+      };
+      const req = https.get(options, (res) => {
+        let raw = '';
+        res.on('data', chunk => raw += chunk);
+        res.on('end', () => {
+          try {
+            if (res.statusCode !== 200) {
+              return resolve({ hasUpdate: false, currentVersion });
+            }
+            const data = JSON.parse(raw);
+            const latestTag = (data.tag_name || '').replace(/^v/, '');
+            
+            // Compare semver
+            const p1 = latestTag.split('.').map(Number);
+            const p2 = currentVersion.split('.').map(Number);
+            let hasUpdate = false;
+            for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+              const n1 = p1[i] || 0;
+              const n2 = p2[i] || 0;
+              if (n1 > n2) { hasUpdate = true; break; }
+              if (n1 < n2) { hasUpdate = false; break; }
+            }
+
+            const setupAsset = data.assets?.find(a => a.name.endsWith('.exe'))?.browser_download_url;
+            const zipAsset = data.assets?.find(a => a.name.endsWith('.zip'))?.browser_download_url;
+
+            resolve({
+              hasUpdate,
+              currentVersion,
+              latestVersion: latestTag,
+              tagName: data.tag_name,
+              releaseName: data.name || `Ather Launcher v${latestTag}`,
+              releaseNotes: data.body || '',
+              htmlUrl: data.html_url,
+              setupUrl: setupAsset || data.html_url,
+              zipUrl: zipAsset || data.html_url
+            });
+          } catch (e) {
+            resolve({ hasUpdate: false, currentVersion, error: e.message });
+          }
+        });
+      });
+      req.on('error', (err) => {
+        resolve({ hasUpdate: false, currentVersion, error: err.message });
+      });
+      req.setTimeout(6000, () => {
+        req.destroy();
+        resolve({ hasUpdate: false, currentVersion, error: 'Timeout' });
+      });
+    });
+  } catch (err) {
+    return { hasUpdate: false, currentVersion: app.getVersion(), error: err.message };
+  }
+});

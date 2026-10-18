@@ -51,9 +51,9 @@
 
   <!-- ================= TOP WINDOW CHROME ================= -->
   <header class="window-drag-region h-12 bg-[#080b12]/95 border-b border-slate-800/80 flex items-center justify-between px-4 z-40">
-    <!-- Brand / Logo -->
-    <div class="window-no-drag flex items-center space-x-3 cursor-default">
-      <div class="voxel-icon w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-700 p-0.5 shadow-lg shadow-emerald-500/25 flex items-center justify-center border border-emerald-300/40">
+    <!-- Brand / Logo (Click 5 times for secret update check) -->
+    <div onclick="triggerSecretUpdateEasterEgg()" class="window-no-drag flex items-center space-x-3 cursor-pointer select-none group" title="Ather Launcher (Click 5x to secretly check updates)">
+      <div class="voxel-icon w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-700 p-0.5 shadow-lg shadow-emerald-500/25 flex items-center justify-center border border-emerald-300/40 group-hover:scale-105 transition transform">
         <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
           <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
@@ -69,6 +69,13 @@
 
     <!-- Right Profile & Controls -->
     <div class="window-no-drag flex items-center space-x-3.5">
+      <!-- Secret Auto-Update Alert Banner (Revealed only when a new release is detected) -->
+      <button id="secret-update-badge" onclick="openUpdateModal()" class="hidden items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 font-bold text-xs shadow-lg shadow-emerald-500/20 transition animate-pulse cursor-pointer">
+        <span>✨</span>
+        <span id="secret-update-text">Update Available</span>
+        <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-400 text-slate-950 font-black">UPDATE</span>
+      </button>
+
       <!-- Player Avatar & Switch Account -->
       <div id="header-profile-btn" onclick="toggleAccountMenu()" class="flex items-center space-x-2.5 cursor-pointer hover:bg-slate-800/60 px-2 py-1 rounded-xl transition">
         <div class="relative">
@@ -113,11 +120,6 @@
         <button onclick="switchTab('instances')" id="nav-btn-instances" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition">
           <span class="text-base">🟩</span>
           <span class="hidden md:inline">Instances</span>
-        </button>
-
-        <button onclick="openModpacksFromSidebar()" id="nav-btn-modpacks" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition">
-          <span class="text-base">📦</span>
-          <span class="hidden md:inline">Modpacks</span>
         </button>
 
         <button onclick="switchTab('radar')" id="nav-btn-radar" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition">
@@ -853,6 +855,41 @@
         <button onclick="closeRadarInstanceModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer">
           Cancel
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: SECRET UPDATE CHECKER ================= -->
+  <div id="modal-update-available" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 border border-emerald-500/40 shadow-[0_0_50px_rgba(16,185,129,0.2)] space-y-4 animate-in fade-in zoom-in-95">
+      <div class="flex items-start justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl text-emerald-400">
+            ✨
+          </div>
+          <div>
+            <h3 id="update-modal-title" class="text-sm font-black text-white">Ather Launcher Update Available</h3>
+            <p id="update-modal-subtitle" class="text-xs text-slate-400">A newer version was discovered by the background updater.</p>
+          </div>
+        </div>
+        <button onclick="closeUpdateModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-1 rounded-lg hover:bg-slate-800/60 transition cursor-pointer">✕</button>
+      </div>
+
+      <div class="bg-slate-950/80 p-4 rounded-xl border border-slate-800 max-h-48 overflow-y-auto space-y-2 text-xs">
+        <div class="flex items-center justify-between text-slate-300 font-mono text-[11px] pb-2 border-b border-slate-800/80">
+          <span>Current: <strong id="update-current-ver" class="text-slate-400">v1.0.1</strong></span>
+          <span class="text-emerald-400 font-bold">➔</span>
+          <span>Latest: <strong id="update-latest-ver" class="text-emerald-400 font-bold">v1.0.2</strong></span>
+        </div>
+        <div id="update-changelog-text" class="text-slate-300 whitespace-pre-wrap font-sans text-xs pt-1 leading-relaxed">
+          New release features and optimizations.
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-2 border-t border-slate-800/80">
+        <button onclick="closeUpdateModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer">Later</button>
+        <button id="btn-update-download-zip" onclick="downloadUpdatePackage('zip')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-white font-bold text-xs transition cursor-pointer">📦 Portable (.zip)</button>
+        <button id="btn-update-download-setup" onclick="downloadUpdatePackage('setup')" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/25 cursor-pointer">⚡ Download Installer</button>
       </div>
     </div>
   </div>

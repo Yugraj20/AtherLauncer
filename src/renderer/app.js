@@ -213,7 +213,92 @@ window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('btn-kill-switch')?.classList.remove('hidden');
     }
   } catch (e) {}
+
+  // Secret Version Update Checker (runs quietly in background on launch)
+  checkSecretUpdates(false);
 });
+
+// ================= SECRET VERSION UPDATE CHECKER =================
+let latestUpdateInfo = null;
+let secretLogoClickCount = 0;
+let secretLogoTimer = null;
+
+async function checkSecretUpdates(isManual = false) {
+  try {
+    if (!window.aether || !window.aether.checkForUpdates) return;
+    if (isManual) {
+      showToast('🔍 Secret checker scanning GitHub for latest Ather release...', 'info');
+    }
+    
+    const info = await window.aether.checkForUpdates();
+    latestUpdateInfo = info;
+
+    if (info && info.hasUpdate) {
+      console.log(`[Secret Update Checker] New release found: v${info.latestVersion} (currently on v${info.currentVersion})`);
+      const badge = document.getElementById('secret-update-badge');
+      const text = document.getElementById('secret-update-text');
+      if (badge && text) {
+        text.innerText = `✨ v${info.latestVersion} Available`;
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+      }
+      if (isManual) {
+        showToast(`✨ Secret check: New version v${info.latestVersion} is available!`, 'success');
+        openUpdateModal();
+      }
+    } else {
+      console.log(`[Secret Update Checker] Running latest version: v${info?.currentVersion || '1.0.1'}`);
+      if (isManual) {
+        showToast(`✓ Secret check: You are on the newest build (v${info?.currentVersion || '1.0.1'})!`, 'success');
+      }
+    }
+  } catch (err) {
+    console.warn('[Secret Update Checker] Error checking for updates:', err);
+    if (isManual) {
+      showToast('Could not reach GitHub Releases: ' + err.message, 'warning');
+    }
+  }
+}
+
+function triggerSecretUpdateEasterEgg() {
+  secretLogoClickCount++;
+  clearTimeout(secretLogoTimer);
+  secretLogoTimer = setTimeout(() => { secretLogoClickCount = 0; }, 2500);
+
+  if (secretLogoClickCount >= 5) {
+    secretLogoClickCount = 0;
+    checkSecretUpdates(true);
+  }
+}
+
+function openUpdateModal() {
+  if (!latestUpdateInfo) return;
+  const curVer = document.getElementById('update-current-ver');
+  const latVer = document.getElementById('update-latest-ver');
+  const title = document.getElementById('update-modal-title');
+  const notes = document.getElementById('update-changelog-text');
+  
+  if (curVer) curVer.innerText = `v${latestUpdateInfo.currentVersion}`;
+  if (latVer) latVer.innerText = `v${latestUpdateInfo.latestVersion}`;
+  if (title) title.innerText = latestUpdateInfo.releaseName || `Ather Launcher v${latestUpdateInfo.latestVersion}`;
+  if (notes) notes.innerText = latestUpdateInfo.releaseNotes || 'Includes new features, modpack support, and performance optimizations.';
+
+  const modal = document.getElementById('modal-update-available');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeUpdateModal() {
+  document.getElementById('modal-update-available')?.classList.add('hidden');
+}
+
+function downloadUpdatePackage(type) {
+  if (!latestUpdateInfo) return;
+  const url = type === 'zip'
+    ? (latestUpdateInfo.zipUrl || latestUpdateInfo.htmlUrl)
+    : (latestUpdateInfo.setupUrl || latestUpdateInfo.htmlUrl);
+  openExternalLink(url);
+  closeUpdateModal();
+}
 
 // Window controls
 function setupWindowControls() {
@@ -774,7 +859,7 @@ function switchTab(tabName) {
   // Always hide edit instance page when switching main tabs
   document.getElementById('view-edit-instance')?.classList.add('hidden');
 
-  const tabs = ['instances', 'modpacks', 'radar', 'settings'];
+  const tabs = ['instances', 'radar', 'settings'];
   tabs.forEach(t => {
     const el = document.getElementById(`view-${t}`);
     const btn = document.getElementById(`nav-btn-${t}`);
@@ -789,23 +874,6 @@ function switchTab(tabName) {
   if (activeView) activeView.classList.remove('hidden');
   if (activeBtn) {
     activeBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition";
-  }
-}
-
-async function openModpacksFromSidebar() {
-  const inst = getActiveInstance();
-  const targetId = inst ? inst.id : (currentInstances[0]?.id || athersChoiceInstances[0]?.id);
-  if (targetId) {
-    await openEditInstancePage(targetId);
-    switchEditTab('modpacks');
-    ['instances', 'radar', 'settings'].forEach(t => {
-      const b = document.getElementById(`nav-btn-${t}`);
-      if (b) b.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition";
-    });
-    const modpackNavBtn = document.getElementById('nav-btn-modpacks');
-    if (modpackNavBtn) {
-      modpackNavBtn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition";
-    }
   }
 }
 
@@ -1076,7 +1144,7 @@ async function openEditInstancePage(instanceId) {
   document.getElementById('view-settings')?.classList.add('hidden');
 
   // Deactivate all sidebar nav buttons
-  ['instances', 'modpacks', 'radar', 'settings'].forEach(t => {
+  ['instances', 'radar', 'settings'].forEach(t => {
     const btn = document.getElementById(`nav-btn-${t}`);
     if (btn) btn.className = "w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition";
   });

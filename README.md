@@ -1,6 +1,6 @@
 <div align="center">
 
-# ✨ Ather Launcher (Aether)
+# ✨ Ather Launcher
 ### The Next-Gen Obsidian & Emerald Minecraft Launcher & Modding Environment
 
 [![Release](https://img.shields.io/badge/Release-v1.0.0-10b981?style=for-the-badge&logo=github)](https://github.com/Yugraj20/AtherLauncer/releases/tag/v1.0.0)
@@ -51,10 +51,6 @@ Ather Launcher comes out of the box with 5 official hand-crafted configurations.
 ### 2. ⚡ Emergency Process Kill Switch
 Never open Task Manager to kill a frozen Minecraft window again. Ather Launcher features an emergency **Kill Switch** that cleanly detects the active game process tree and performs a safe tree termination (`taskkill /t /f`) with a custom Obsidian confirmation popup dialog.
 
-<div align="center">
-  <img src="media/launcher-ui-hero.jpg" alt="Ather Launcher Hero View" width="800" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);" />
-</div>
-
 ---
 
 ### 3. 🧩 Integrated Modrinth Ecosystem (Mods, Resource Packs & Shaders)
@@ -84,17 +80,16 @@ Ather Launcher strictly enforces official Minecraft Java authentication through 
 
 ---
 
-## 📸 Screenshots Showcase
+## 🌄 Dynamic Wallpaper Gallery
+
+Every instance in Ather Launcher automatically draws from a curated 25-image gallery of cinematic Minecraft landscape renders:
 
 <div align="center">
   <table>
     <tr>
-      <td><img src="media/cherry-blossom.jpg" alt="Cherry Blossom Grove" width="420" style="border-radius: 8px;"/><br/><center><b>Cherry Blossom RTX</b></center></td>
-      <td><img src="media/amethyst-cave.jpg" alt="Lush Amethyst Cave" width="420" style="border-radius: 8px;"/><br/><center><b>Lush Amethyst Cavern</b></center></td>
-    </tr>
-    <tr>
-      <td><img src="media/minecraft-sunset.jpg" alt="Sunset Landscape" width="420" style="border-radius: 8px;"/><br/><center><b>Raytraced Sunset Water</b></center></td>
-      <td><img src="media/launcher-screenshot.png" alt="Launcher Interface" width="420" style="border-radius: 8px;"/><br/><center><b>Ather Launcher Interface</b></center></td>
+      <td><img src="media/cherry-blossom.jpg" alt="Cherry Blossom Grove" width="280" style="border-radius: 8px;"/><br/><center><b>Cherry Blossom RTX</b></center></td>
+      <td><img src="media/amethyst-cave.jpg" alt="Lush Amethyst Cave" width="280" style="border-radius: 8px;"/><br/><center><b>Lush Amethyst Cavern</b></center></td>
+      <td><img src="media/minecraft-sunset.jpg" alt="Sunset Landscape" width="280" style="border-radius: 8px;"/><br/><center><b>Raytraced Sunset Water</b></center></td>
     </tr>
   </table>
 </div>
@@ -151,10 +146,10 @@ AtherLauncer/
 │       ├── style.css            # Tailwind + custom CSS3 glassmorphism & keyframe animations
 │       ├── app.js               # Reactive UI controller, state engine & audio feedback
 │       └── assets/              # Banners (25-image gallery), launcher icon & UI textures
-├── docs/                        # 3D Three.js interactive showcase website (GitHub Pages)
-│   ├── index.html               # 3D interactive voxel WebGL scene & product page
-│   └── assets/                  # WebGL textures & showcase imagery
-├── media/                       # High-resolution screenshots & release illustrations
+├── docs/                        # 3D interactive showcase website (GitHub Pages)
+│   ├── index.html               # 3D interactive showcase website with perspective tilt & scroll effects
+│   └── assets/                  # Showcase imagery & screenshots
+├── media/                       # High-resolution screenshots & wallpaper assets
 ├── package.json                 # Electron & electron-builder configuration
 └── README.md                    # Project documentation
 ```

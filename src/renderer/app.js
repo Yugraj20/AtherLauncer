@@ -327,7 +327,7 @@ async function loadInstances() {
   if (grid) grid.innerHTML = '';
   if (athersGrid) athersGrid.innerHTML = '';
   if (countBadge) countBadge.innerText = `${currentInstances.length} Instances`;
-  if (athersCountBadge) athersCountBadge.innerText = `${athersChoiceInstances.length} Curated 26.3 Presets`;
+  if (athersCountBadge) athersCountBadge.innerText = `${athersChoiceInstances.length} Curated Presets`;
 
   // Always show hero wrapper (since Ather's Choice presets are always available)
   if (heroWrapper) heroWrapper.classList.remove('hidden');
@@ -565,8 +565,8 @@ function updateHeroBanner(inst) {
 // Create Instance Modal (All Versions & Loaders)
 let allMojangVersions = [];
 let optifineVersions = [];
-let latestReleaseVersion = '26.3';
-let latestSnapshotVersion = '26.4-snapshot-4';
+let latestReleaseVersion = '1.21.4';
+let latestSnapshotVersion = '1.21.5-pre1';
 
 async function preloadMojangVersions() {
   try {

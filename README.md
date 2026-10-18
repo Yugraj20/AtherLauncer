@@ -1,10 +1,10 @@
 <div align="center">
 
 # ✨ Ather Launcher (Aether)
-### The Next-Gen Obsidian & Emerald Minecraft Client & Modding Environment
+### The Next-Gen Obsidian & Emerald Minecraft Launcher & Modding Environment
 
 [![Release](https://img.shields.io/badge/Release-v1.0.0-10b981?style=for-the-badge&logo=github)](https://github.com/Yugraj20/AtherLauncer/releases/tag/v1.0.0)
-[![Minecraft](https://img.shields.io/badge/Minecraft-26.3%20%7C%201.21.4%2B-06b6d4?style=for-the-badge&logo=minecraft)](https://minecraft.net)
+[![Minecraft](https://img.shields.io/badge/Minecraft-All%20Versions%20Supported-06b6d4?style=for-the-badge&logo=minecraft)](https://minecraft.net)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-3b82f6?style=for-the-badge&logo=windows)](https://github.com/Yugraj20/AtherLauncer/releases)
 [![Website](https://img.shields.io/badge/3D%20Website-Live%20on%20GitHub%20Pages-8b5cf6?style=for-the-badge&logo=google-chrome)](https://yugraj20.github.io/AtherLauncer/)
 [![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](LICENSE)
@@ -35,8 +35,8 @@
 
 ## 🌟 Highlights & Key Features
 
-### 1. ✨ "Ather's Choice" Curated 26.3 Presets (Cloud On-Demand)
-Ather Launcher comes out of the box with 5 official hand-crafted configurations for Minecraft `26.3` (Fabric). Presets do not take up space until you click **PLAY**, which triggers an automated on-demand download of all required mods, resource packs, shaders, Fabric loader, and Minecraft client files:
+### 1. ✨ "Ather's Choice" Curated Presets (Cloud On-Demand)
+Ather Launcher comes out of the box with 5 official hand-crafted configurations. Ather Launcher is a full-featured launcher that supports all Minecraft versions (from legacy 1.7.10 up to the newest releases and snapshots). Presets do not take up space until you click **PLAY**, which triggers an automated on-demand download of all required mods, resource packs, shaders, loader, and game files:
 
 | Preset Name | Target Style | Key Mods & Shaders | Image Preview |
 | :--- | :--- | :--- | :---: |
@@ -175,7 +175,7 @@ AtherLauncer/
 
 ## ⚖️ Disclaimer & Legal
 
-**Ather Launcher** is an open-source community client and is **NOT** an official Minecraft product. It is not approved by or associated with Mojang Studios, Microsoft Corporation, or Modrinth. All Minecraft assets, names, and trademarks belong to Mojang Studios / Microsoft.
+**Ather Launcher** is an open-source community launcher and is **NOT** an official Minecraft product. It is not approved by or associated with Mojang Studios, Microsoft Corporation, or Modrinth. All Minecraft assets, names, and trademarks belong to Mojang Studios / Microsoft.
 
 ---
 

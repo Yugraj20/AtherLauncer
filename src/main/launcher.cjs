@@ -19,9 +19,9 @@ const https = require('https');
 
 const ATHERS_CHOICE_PRESETS = [
   {
-    id: 'aether-hyperion-fps-26-3',
-    name: 'Hyperion FPS Boost 26.3',
-    version: '26.3',
+    id: 'aether-hyperion-fps',
+    name: 'Hyperion FPS Boost',
+    version: '1.21.4',
     loader: 'Fabric',
     isAthersChoice: true,
     memoryMin: 2,
@@ -33,9 +33,9 @@ const ATHERS_CHOICE_PRESETS = [
     requiredShaders: ['makeup-ultra-fast-shaders']
   },
   {
-    id: 'aether-rtx-cinematic-26-3',
-    name: 'RTX Cinematic Shaders 26.3',
-    version: '26.3',
+    id: 'aether-rtx-cinematic',
+    name: 'RTX Cinematic Shaders',
+    version: '1.21.4',
     loader: 'Fabric',
     isAthersChoice: true,
     memoryMin: 4,
@@ -47,9 +47,9 @@ const ATHERS_CHOICE_PRESETS = [
     requiredShaders: ['complementary-reimagined', 'bsl-shaders']
   },
   {
-    id: 'aether-survival-plus-26-3',
-    name: 'Survival+ Explorer 26.3',
-    version: '26.3',
+    id: 'aether-survival-plus',
+    name: 'Survival+ Explorer',
+    version: '1.21.4',
     loader: 'Fabric',
     isAthersChoice: true,
     memoryMin: 2,
@@ -61,9 +61,9 @@ const ATHERS_CHOICE_PRESETS = [
     requiredShaders: ['complementary-unbound']
   },
   {
-    id: 'aether-multiplayer-smp-26-3',
-    name: 'Multiplayer SMP Pro 26.3',
-    version: '26.3',
+    id: 'aether-multiplayer-smp',
+    name: 'Multiplayer SMP Pro',
+    version: '1.21.4',
     loader: 'Fabric',
     isAthersChoice: true,
     memoryMin: 2,
@@ -75,9 +75,9 @@ const ATHERS_CHOICE_PRESETS = [
     requiredShaders: ['solas-shader']
   },
   {
-    id: 'aether-realism-immersion-26-3',
-    name: 'Realism & Immersion 26.3',
-    version: '26.3',
+    id: 'aether-realism-immersion',
+    name: 'Realism & Immersion',
+    version: '1.21.4',
     loader: 'Fabric',
     isAthersChoice: true,
     memoryMin: 4,

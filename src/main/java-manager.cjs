@@ -17,10 +17,10 @@ function ensureDirectories() {
 /**
  * Determine the required Java major version for a given Minecraft version.
  * @param {object} versionData Mojang version JSON metadata
- * @param {string} mcVersion Minecraft version string (e.g. '26.3', '1.21.4', '1.16.5')
+ * @param {string} mcVersion Minecraft version string (e.g. '1.21.4', '1.16.5', '1.8.9')
  * @returns {number} 8, 17, 21, or 25
  */
-function getRequiredJavaVersion(versionData, mcVersion = '26.3') {
+function getRequiredJavaVersion(versionData, mcVersion = '1.21.4') {
   if (versionData && versionData.javaVersion && versionData.javaVersion.majorVersion) {
     const declared = versionData.javaVersion.majorVersion;
     if (declared >= 25) return 25;

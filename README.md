@@ -3,7 +3,7 @@
 # ✨ Ather Launcher
 ### The Next-Gen Obsidian & Emerald Minecraft Launcher & Modding Environment
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-10b981?style=for-the-badge&logo=github)](https://github.com/Yugraj20/AtherLauncer/releases/tag/v1.0.0)
+[![Release](https://img.shields.io/badge/Release-v1.0.1-10b981?style=for-the-badge&logo=github)](https://github.com/Yugraj20/AtherLauncer/releases/tag/v1.0.1)
 [![Minecraft](https://img.shields.io/badge/Minecraft-All%20Versions%20Supported-06b6d4?style=for-the-badge&logo=minecraft)](https://minecraft.net)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-3b82f6?style=for-the-badge&logo=windows)](https://github.com/Yugraj20/AtherLauncer/releases)
 [![Website](https://img.shields.io/badge/3D%20Website-Live%20on%20GitHub%20Pages-8b5cf6?style=for-the-badge&logo=google-chrome)](https://yugraj20.github.io/AtherLauncer/)
@@ -18,18 +18,18 @@
 
 **Ather Launcher** is an ultra-fast, modern Minecraft launcher engineered with a dark bedrock & obsidian glassmorphic aesthetic, animated ambient splash sequence, built-in Modrinth addon management, real-time Server Radar, emergency process kill switch, and **Ather's Choice** curated modpack presets.
 
-[🌐 Explore 3D Website](https://yugraj20.github.io/AtherLauncer/) • [⚡ Download Installer](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether.Launcher.Setup.1.0.0.exe) • [📦 Download Portable (.zip)](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether-Launcher-1.0.0-Portable.zip)
+[🌐 Explore 3D Website](https://yugraj20.github.io/AtherLauncer/) • [⚡ Download Installer](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.1/Aether.Launcher.Setup.1.0.1.exe) • [📦 Download Portable (.zip)](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.1/Aether-Launcher-1.0.1-Portable.zip)
 
 </div>
 
 ---
 
-## ⚡ Instant Downloads (v1.0.0 Release)
+## ⚡ Instant Downloads (v1.0.1 Release)
 
 | Package | Type | File Size | Description | Download |
 | :--- | :---: | :---: | :--- | :---: |
-| **Ather Launcher Setup** | Installer `.exe` | `~87.7 MB` | Standard Windows NSIS setup wizard with desktop shortcut & start menu | [⚡ Download Setup](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether.Launcher.Setup.1.0.0.exe) |
-| **Ather Launcher Portable** | Portable `.zip` | `~123 MB` | Standalone zero-install archive. Extract anywhere and double-click `Aether Launcher.exe` | [📦 Download Portable](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether-Launcher-1.0.0-Portable.zip) |
+| **Ather Launcher Setup** | Installer `.exe` | `~87.7 MB` | Standard Windows NSIS setup wizard with desktop shortcut & start menu | [⚡ Download Setup](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.1/Aether.Launcher.Setup.1.0.1.exe) |
+| **Ather Launcher Portable** | Portable `.zip` | `~123 MB` | Standalone zero-install archive. Extract anywhere and double-click `Aether Launcher.exe` | [📦 Download Portable](https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.1/Aether-Launcher-1.0.1-Portable.zip) |
 
 ---
 

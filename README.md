@@ -53,12 +53,13 @@ Never open Task Manager to kill a frozen Minecraft window again. Ather Launcher 
 
 ---
 
-### 3. 🧩 Integrated Modrinth Ecosystem (Mods, Resource Packs & Shaders)
+### 3. 🧩 Integrated Modrinth Ecosystem (Mods, Modpacks, Resource Packs & Shaders)
 Manage your instance addons directly in-app:
-- 1-Click Search and Install from millions of Modrinth projects.
-- Dedicated tabs for **Installed Mods**, **Resource Packs**, and **Shader Packs**.
-- Instant enable/disable toggle without deleting files.
-- Dedicated **Game Folder** and **Folder Type** buttons right inside each menu.
+- **Modpacks (.mrpack)**: Search and 1-click install full community modpacks from Modrinth with automated override extraction, mod dependency fetching, and companion metadata.
+- **Mods (Fabric & Forge)**: Browse, install, toggle, or remove mods on the fly.
+- **Resource Packs & Shaders**: Full support for texture packs and Iris/OptiFine shaderpacks.
+- **Instant Toggles**: Enable/disable any mod, modpack, texture, or shader with one click without deleting files.
+- **Direct Folder Access**: Dedicated `📂 Folder` shortcuts inside each menu for rapid modding.
 
 ---
 

@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --obsidian-bg: #07090e;
+  --obsidian-surface: #0c1018;
+  --obsidian-panel: rgba(14, 19, 30, 0.75);
+  --emerald-glow: #10b981;
+  --cyan-glow: #06b6d4;
+  --amethyst-glow: #a855f7;
+  --border-glass: rgba(16, 185, 129, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+body {
+  background: var(--obsidian-bg);
+  color: #f1f5f9;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--obsidian-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(20, 27, 41, 0.8) 0%, rgba(10, 14, 23, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-card:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 10px 40px 0 rgba(16, 185, 129, 0.15);
+}
+
+/* Enchanted Glowing Emerald Button */
+.minecraft-play-btn {
+  background: linear-gradient(180deg, #34d399 0%, #059669 50%, #047857 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 0 24px rgba(16, 185, 129, 0.6);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minecraft-play-btn:hover {
+  background: linear-gradient(180deg, #4ade80 0%, #10b981 50%, #059669 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.6), 0 0 35px rgba(52, 211, 153, 0.85);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.minecraft-play-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Emergency Kill Switch Button */
+.kill-switch-btn {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 50%, #991b1b 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3), 0 0 24px rgba(239, 68, 68, 0.6);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kill-switch-btn:hover {
+  background: linear-gradient(180deg, #f87171 0%, #ef4444 50%, #b91c1c 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 0 35px rgba(248, 113, 113, 0.85);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.kill-switch-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Instance Card Hover Action Bar Animation (20:80 Ratio) */
+.instance-card-actions {
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.24s ease-out;
+}
+
+.group:hover .instance-card-actions {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.instance-quick-play-btn {
+  background: linear-gradient(180deg, #34d399 0%, #059669 50%, #047857 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.instance-quick-play-btn:hover {
+  background: linear-gradient(180deg, #4ade80 0%, #10b981 50%, #059669 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 4px 22px rgba(52, 211, 153, 0.7);
+  transform: scale(1.02);
+}
+
+.instance-quick-play-btn:active {
+  transform: scale(0.97);
+}
+
+.instance-gear-btn {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s ease;
+}
+
+.instance-gear-btn:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(52, 211, 153, 0.6);
+  transform: scale(1.04) rotate(30deg);
+}
+
+.instance-gear-btn:active {
+  transform: scale(0.95);
+}
+
+/* Voxel Floating Animation */
+@keyframes voxel-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(1.5deg); }
+}
+
+.voxel-icon {
+  animation: voxel-float 4s ease-in-out infinite;
+}
+
+/* Electron Window Drag Regions */
+.window-drag-region {
+  -webkit-app-region: drag;
+}
+
+.window-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Scrollbar Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.6);
+}
+
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  top: 48px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast-message {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(13, 18, 29, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f1f5f9;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.toast-message.toast-visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-message.toast-danger {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, rgba(35, 12, 17, 0.95) 0%, rgba(15, 20, 30, 0.95) 100%);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+}
+
+.toast-message.toast-success {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, rgba(8, 35, 24, 0.95) 0%, rgba(15, 20, 30, 0.95) 100%);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+}
+
+.toast-message.toast-warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, rgba(38, 26, 10, 0.95) 0%, rgba(15, 20, 30, 0.95) 100%);
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+}
+
+/* ================= LAUNCHER INTRO SPLASH SCREEN ================= */
+#aether-splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 9, 16, 0.82);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  opacity: 1;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.75s ease, -webkit-backdrop-filter 0.75s ease, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#aether-splash-screen.splash-fade-out {
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+@keyframes splashLogoReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.45) translateY(24px) rotate(-8deg);
+    filter: drop-shadow(0 0 0px rgba(16, 185, 129, 0));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-4px) rotate(2deg);
+    filter: drop-shadow(0 0 55px rgba(16, 185, 129, 0.85));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0px) rotate(0deg);
+    filter: drop-shadow(0 0 38px rgba(16, 185, 129, 0.65));
+  }
+}
+
+@keyframes splashTextReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+    letter-spacing: 0.1em;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.28em;
+  }
+}
+
+@keyframes splashOrbitSpin {
+  0% {
+    transform: rotate(0deg) scale(0.95);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(0.95);
+  }
+}
+
+@keyframes splashBarLoad {
+  0% {
+    width: 0%;
+  }
+  40% {
+    width: 55%;
+  }
+  80% {
+    width: 88%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.splash-logo-box {
+  animation: splashLogoReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.splash-title-text {
+  opacity: 0;
+  animation: splashTextReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+}
+
+.splash-orbit-ring {
+  animation: splashOrbitSpin 6s linear infinite;
+}
+
+.splash-progress-fill {
+  width: 0%;
+  animation: splashBarLoad 1.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+}
+

@@ -1,0 +1,52 @@
+{
+  "name": "aether-launcher",
+  "version": "1.0.0",
+  "description": "Aesthetic Dark Obsidian Minecraft Launcher",
+  "main": "src/main/main.cjs",
+  "type": "commonjs",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "keywords": [
+    "minecraft",
+    "launcher",
+    "modrinth",
+    "curseforge",
+    "fabric",
+    "forge"
+  ],
+  "author": "Aether Contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^34.2.0",
+    "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "adm-zip": "^0.6.1"
+  },
+  "build": {
+    "appId": "com.aether.launcher",
+    "productName": "Aether Launcher",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Aether Launcher"
+    }
+  }
+}

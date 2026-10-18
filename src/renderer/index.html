@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aether Launcher</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col h-screen select-none bg-[#07090e] text-slate-100 overflow-hidden relative">
+
+  <!-- ================= ANIMATED INTRO SPLASH SCREEN ================= -->
+  <div id="aether-splash-screen">
+    <!-- Ambient Background Glow Orbs -->
+    <div class="absolute w-96 h-96 rounded-full bg-emerald-500/15 blur-[110px] pointer-events-none"></div>
+    <div class="absolute w-72 h-72 rounded-full bg-cyan-500/10 blur-[90px] translate-x-24 -translate-y-16 pointer-events-none"></div>
+
+    <!-- Center Animated Logo Emblem -->
+    <div class="relative flex items-center justify-center mb-6">
+      <!-- Spinning Orbital Rings -->
+      <div class="splash-orbit-ring absolute w-32 h-32 rounded-3xl border border-emerald-400/25"></div>
+      <div class="splash-orbit-ring absolute w-28 h-28 rounded-2xl border border-cyan-400/20" style="animation-direction: reverse; animation-duration: 8s;"></div>
+
+      <!-- 3D Voxel Cube Logo -->
+      <div class="splash-logo-box relative w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-400 via-emerald-600 to-amber-800 p-0.5 flex items-center justify-center border border-emerald-300/60 shadow-2xl">
+        <div class="w-full h-full rounded-[22px] bg-slate-950/30 backdrop-blur-sm flex items-center justify-center">
+          <svg class="w-12 h-12 text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animated Brand Title & Progress -->
+    <div class="splash-title-text text-center space-y-2 relative z-10">
+      <div class="flex items-center justify-center space-x-2.5">
+        <span class="font-black text-3xl text-emerald-400 drop-shadow-[0_0_20px_rgba(16,185,129,0.5)]">AETHER</span>
+        <span class="font-black text-3xl text-white">LAUNCHER</span>
+      </div>
+      <div class="text-[10px] font-mono tracking-[0.25em] text-slate-400 uppercase">
+        Initializing Voxel Engine & Instances
+      </div>
+      <!-- Laser Progress Bar -->
+      <div class="w-52 h-1 bg-slate-800/80 rounded-full overflow-hidden mx-auto mt-4 border border-slate-700/50">
+        <div class="splash-progress-fill h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-cyan-400 rounded-full shadow-[0_0_12px_#10b981]"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOP WINDOW CHROME ================= -->
+  <header class="window-drag-region h-12 bg-[#080b12]/95 border-b border-slate-800/80 flex items-center justify-between px-4 z-40">
+    <!-- Brand / Logo -->
+    <div class="window-no-drag flex items-center space-x-3 cursor-default">
+      <div class="voxel-icon w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-amber-700 p-0.5 shadow-lg shadow-emerald-500/25 flex items-center justify-center border border-emerald-300/40">
+        <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+          <line x1="12" y1="22.08" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="font-black text-sm tracking-widest text-emerald-400">AETHER</span>
+        <span class="text-xs font-bold text-slate-300">MINECRAFT</span>
+        <span class="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">JAVA EDITION</span>
+      </div>
+    </div>
+
+    <!-- Right Profile & Controls -->
+    <div class="window-no-drag flex items-center space-x-3.5">
+      <!-- Player Avatar & Switch Account -->
+      <div id="header-profile-btn" onclick="toggleAccountMenu()" class="flex items-center space-x-2.5 cursor-pointer hover:bg-slate-800/60 px-2 py-1 rounded-xl transition">
+        <div class="relative">
+          <img id="header-avatar" src="https://api.mineatar.io/face/c06f89064c8a49119c29ea1dbd1aab82" class="w-8 h-8 rounded-md border-2 border-emerald-400/60 shadow-md">
+          <span id="header-status-dot" class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-[#080b12] rounded-full"></span>
+        </div>
+        <div class="text-left hidden sm:block">
+          <div class="text-xs font-bold text-slate-200 flex items-center space-x-1">
+            <span id="header-username">CyberSteve</span>
+            <span id="header-tag" class="text-[9px] text-amber-400">★</span>
+          </div>
+          <div id="header-account-type" class="text-[10px] text-emerald-400/90 font-mono">OFFICIAL MINECRAFT</div>
+        </div>
+      </div>
+
+      <!-- Account Dropdown Menu -->
+      <div id="account-dropdown" class="hidden absolute top-14 right-16 w-52 glass-card rounded-xl border border-slate-700/80 p-2 shadow-2xl z-50 space-y-1">
+        <div class="px-2 py-1 text-[10px] text-slate-400 font-mono border-b border-slate-800 pb-1">ACCOUNT OPTIONS</div>
+        <button onclick="promptSwitchAccount()" class="w-full text-left px-2.5 py-2 text-xs text-slate-200 hover:bg-slate-800 rounded-lg flex items-center space-x-2 transition">
+          <span>🔄</span><span>Switch Account</span>
+        </button>
+        <button onclick="handleLogout()" class="w-full text-left px-2.5 py-2 text-xs text-red-400 hover:bg-red-950/40 rounded-lg flex items-center space-x-2 transition">
+          <span>🚪</span><span>Sign Out / Log Out</span>
+        </button>
+      </div>
+
+      <!-- Window Control Buttons -->
+      <div class="flex items-center space-x-1 text-slate-400 pl-2">
+        <button id="btn-win-min" class="hover:bg-slate-800 p-1.5 rounded text-xs transition">🗕</button>
+        <button id="btn-win-max" class="hover:bg-slate-800 p-1.5 rounded text-xs transition">🗖</button>
+        <button id="btn-win-close" class="hover:bg-red-500/80 hover:text-white p-1.5 rounded text-xs transition">✕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= WORKSPACE BODY ================= -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left Navigation Rail -->
+    <aside class="w-16 md:w-56 glass-panel border-r border-slate-800/80 flex flex-col justify-between p-3 z-30">
+      <nav class="space-y-1.5">
+        <button onclick="switchTab('instances')" id="nav-btn-instances" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-emerald-500/15 border-l-2 border-emerald-400 text-emerald-300 font-bold text-xs transition">
+          <span class="text-base">🟩</span>
+          <span class="hidden md:inline">Instances</span>
+        </button>
+
+        <button onclick="switchTab('radar')" id="nav-btn-radar" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition">
+          <span class="text-base">📡</span>
+          <span class="hidden md:inline">Server Radar</span>
+        </button>
+
+        <button onclick="switchTab('settings')" id="nav-btn-settings" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition">
+          <span class="text-base">⚙️</span>
+          <span class="hidden md:inline">Java & RAM</span>
+        </button>
+      </nav>
+
+      <!-- Bottom RAM Allocation Card -->
+      <div class="hidden md:block p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+        <div class="flex items-center justify-between text-[11px] text-slate-300 font-bold mb-1.5">
+          <span class="flex items-center space-x-1">
+            <span>⚡</span><span>ALLOCATED RAM</span>
+          </span>
+          <span id="sidebar-ram-display" class="font-mono text-emerald-400 font-bold">6.0 GB</span>
+        </div>
+        <input type="range" id="sidebar-ram-slider" min="2" max="16" value="6" step="1" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer mb-2">
+        <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+          <span id="sidebar-java-vendor">JDK 21 (ZGC)</span>
+          <span class="text-emerald-400 font-bold">ACTIVE</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Views Container -->
+    <main class="flex-1 flex flex-col overflow-y-auto relative bg-[#090d15]">
+      
+      <!-- ================= VIEW 1: INSTANCES ================= -->
+      <section id="view-instances" class="flex flex-col">
+        
+        <!-- Hero Section (Shown when instance is selected) -->
+        <div id="instances-hero-wrapper" class="relative h-[370px] w-full overflow-hidden flex flex-col justify-end p-6 border-b border-slate-800/80">
+          <div id="hero-bg" class="absolute inset-0 bg-cover bg-center transition-all duration-700" style="background-image: url('assets/banners/banner_01.jpg');">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#090d15] via-[#090d15]/50 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[#090d15] via-transparent to-[#090d15]/60"></div>
+          </div>
+
+          <div class="relative z-10 max-w-2xl">
+            <div class="flex flex-wrap items-center gap-1.5 mb-2">
+              <span id="hero-loader-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-bold tracking-wider">FABRIC 1.21.4</span>
+              <span id="hero-mods-badge" class="px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 font-mono text-[10px] font-bold">0 MODS</span>
+              <span id="hero-shaders-badge" class="px-2 py-0.5 rounded bg-purple-500/20 border border-purple-400/40 text-purple-300 font-mono text-[10px] font-bold">VANILLA PIPELINE</span>
+            </div>
+
+            <h1 id="hero-title" class="text-3xl md:text-4xl font-black tracking-tight text-white drop-shadow-lg">
+              Survival Experience
+            </h1>
+            <p id="hero-desc" class="text-xs md:text-sm text-slate-300 mt-1 max-w-xl line-clamp-2">
+              Clean instance ready for Minecraft gameplay.
+            </p>
+
+            <div class="mt-5 flex flex-wrap items-center gap-3">
+              <!-- PLAY MINECRAFT BUTTON -->
+              <button id="btn-launch-game" class="minecraft-play-btn flex items-center space-x-3 px-8 py-3.5 rounded-xl text-slate-950 font-black text-sm uppercase tracking-wider">
+                <svg id="launch-spinner" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <span id="launch-button-text">PLAY MINECRAFT</span>
+              </button>
+
+              <!-- EMERGENCY KILL SWITCH BUTTON (Shown when instance is running or launching) -->
+              <button id="btn-kill-switch" onclick="openKillSwitchModal()" class="hidden kill-switch-btn px-5 py-3.5 rounded-xl text-white font-black text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg shadow-red-950/60 transition active:scale-95 animate-pulse cursor-pointer">
+                <span class="text-sm">⚡</span>
+                <span>KILL SWITCH</span>
+              </button>
+
+              <button id="btn-open-folder" class="px-3.5 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition">
+                <span>📂</span><span>Game Folder</span>
+              </button>
+
+              <button id="btn-edit-instance" onclick="openCurrentInstanceEditPage()" class="px-3.5 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>⚙️</span><span>Edit & Mods</span>
+              </button>
+
+              <button id="btn-delete-inst" onclick="handleDeleteCurrentInstance()" class="px-3.5 py-3 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-700/40 text-red-300 text-xs font-semibold flex items-center space-x-1.5 transition">
+                <span>🗑️</span><span>Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Terminal Stream Drawer -->
+        <div id="terminal-drawer" class="hidden mx-6 my-4 p-4 rounded-xl bg-black/95 border border-emerald-500/40 font-mono text-xs text-slate-300 space-y-1 max-h-48 overflow-y-auto shadow-2xl">
+          <div class="flex justify-between items-center text-emerald-400 font-bold border-b border-emerald-900/40 pb-1 mb-2">
+            <span class="flex items-center space-x-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>MINECRAFT GAME PROCESS STREAM</span>
+            </span>
+            <span id="terminal-status" class="text-emerald-300 text-[11px] font-bold">READY</span>
+          </div>
+          <div id="terminal-output" class="space-y-0.5 text-[11px]"></div>
+        </div>
+
+        <!-- Instances Grid & Create Instance Bar -->
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+              <h2 class="text-sm font-bold tracking-wider uppercase text-slate-200">Your Minecraft Instances</h2>
+              <span id="instances-count-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-900 font-mono">0 Instances</span>
+            </div>
+            <!-- CREATE INSTANCE BUTTON -->
+            <button onclick="openCreateInstanceModal()" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+              <span class="text-sm">+</span><span>Create New Instance</span>
+            </button>
+          </div>
+
+          <div id="instances-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Populated dynamically or empty state -->
+          </div>
+        </div>
+
+        <!-- ================= ATHER'S CHOICE (CURATED PRESETS FOR ALL USERS) ================= -->
+        <div class="px-6 pb-8 pt-5 border-t border-slate-800/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div class="flex items-center space-x-2.5">
+              <span class="text-base">✨</span>
+              <h2 class="text-sm font-black tracking-wider uppercase bg-gradient-to-r from-emerald-300 via-cyan-300 to-purple-300 bg-clip-text text-transparent">
+                Ather's Choice
+              </h2>
+              <span id="athers-choice-count-badge" class="text-[10px] px-2.5 py-0.5 rounded-full bg-cyan-950/90 text-cyan-300 border border-cyan-500/40 font-mono font-bold">
+                5 Curated 26.3 Presets
+              </span>
+            </div>
+            <span class="text-[11px] text-slate-400 font-mono">
+              ⚡ Click <strong class="text-emerald-400">PLAY</strong> on any instance to automatically download required mods, resource packs, shaders &amp; game files
+            </span>
+          </div>
+
+          <div id="athers-choice-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Populated dynamically via app.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW: INSTANCE EDIT & MODS PAGE ================= -->
+      <section id="view-edit-instance" class="hidden p-6 space-y-6">
+        
+        <!-- Top Back Bar & Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+          <div class="flex items-center space-x-3.5">
+            <button onclick="closeEditInstancePage()" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center space-x-1.5 text-xs font-bold cursor-pointer">
+              <span>←</span>
+              <span>Back to Instances</span>
+            </button>
+            <div class="h-6 w-[1px] bg-slate-800"></div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 id="edit-page-title" class="text-xl font-black text-white">Instance Name</h2>
+                <span id="edit-page-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-bold">FABRIC 1.21.4</span>
+              </div>
+              <p id="edit-page-subtitle" class="text-xs text-slate-400 mt-0.5 font-mono">Managing instance files, installed mods, and JVM configuration</p>
+            </div>
+          </div>
+
+          <!-- Top Bar Quick Actions: Game Folder & Play Button side-by-side -->
+          <div class="flex items-center space-x-2.5">
+            <button onclick="openEditInstanceGameFolder()" class="px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-slate-200 text-xs font-bold flex items-center space-x-2 transition cursor-pointer shadow-sm">
+              <span>📂</span><span>Game Folder</span>
+            </button>
+            <button id="btn-edit-play-instance" onclick="launchFromEditPage()" class="minecraft-play-btn flex items-center space-x-2 px-6 py-2 rounded-xl text-slate-950 font-black text-xs uppercase tracking-wider cursor-pointer shadow-md">
+              <span>▶</span><span>PLAY</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Instance Edit Tabs Nav (Unsquishable, cleanly scrollable horizontally) -->
+        <div class="flex items-center space-x-2 border-b border-slate-800/80 pb-2 pt-1 overflow-x-auto no-scrollbar flex-shrink-0 min-h-[50px]">
+          <button id="edit-tab-btn-mods" onclick="switchEditTab('mods')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 text-emerald-300 font-bold text-xs border border-emerald-500/40 transition cursor-pointer flex-shrink-0">
+            <span>🧩</span><span>Installed Mods</span>
+            <span id="edit-installed-mods-count" class="px-1.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-mono text-[10px]">0</span>
+          </button>
+          <button id="edit-tab-btn-resourcepacks" onclick="switchEditTab('resourcepacks')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
+            <span>🎨</span><span>Resource Packs</span>
+            <span id="edit-installed-resourcepacks-count" class="px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px]">0</span>
+          </button>
+          <button id="edit-tab-btn-shaders" onclick="switchEditTab('shaders')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
+            <span>✨</span><span>Shaders</span>
+            <span id="edit-installed-shaders-count" class="px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px]">0</span>
+          </button>
+          <button id="edit-tab-btn-browse" onclick="switchEditTab('browse')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
+            <span>🌐</span><span>Browse Modrinth</span>
+          </button>
+          <button id="edit-tab-btn-settings" onclick="switchEditTab('settings')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
+            <span>⚙️</span><span>Instance Settings & RAM</span>
+          </button>
+        </div>
+
+        <!-- SUB-TAB 1: INSTALLED MODS -->
+        <div id="edit-tab-content-mods" class="space-y-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <input id="input-filter-installed-mods" oninput="filterInstalledAddonsList('mods')" type="text" placeholder="Filter installed mods..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+              <button onclick="openEditInstanceFolder('mods')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>📂</span><span>Mods Folder</span>
+              </button>
+              <button onclick="refreshInstalledAddonsList('mods')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>🔄</span><span>Refresh</span>
+              </button>
+              <button onclick="browseModrinthCategory('mod')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                <span>+</span><span>Browse Modrinth Mods</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="installed-mods-container" class="space-y-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- SUB-TAB 2: INSTALLED RESOURCE PACKS -->
+        <div id="edit-tab-content-resourcepacks" class="hidden space-y-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <input id="input-filter-installed-resourcepacks" oninput="filterInstalledAddonsList('resourcepacks')" type="text" placeholder="Filter texture & resource packs..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+              <button onclick="openEditInstanceFolder('resourcepacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>📂</span><span>Resource Packs Folder</span>
+              </button>
+              <button onclick="refreshInstalledAddonsList('resourcepacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>🔄</span><span>Refresh</span>
+              </button>
+              <button onclick="browseModrinthCategory('resourcepack')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                <span>+</span><span>Browse Resource Packs</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="installed-resourcepacks-container" class="space-y-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- SUB-TAB 3: INSTALLED SHADERS -->
+        <div id="edit-tab-content-shaders" class="hidden space-y-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <input id="input-filter-installed-shaders" oninput="filterInstalledAddonsList('shaderpacks')" type="text" placeholder="Filter shader packs..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+              <button onclick="openEditInstanceFolder('shaderpacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>📂</span><span>Shaders Folder</span>
+              </button>
+              <button onclick="refreshInstalledAddonsList('shaderpacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>🔄</span><span>Refresh</span>
+              </button>
+              <button onclick="browseModrinthCategory('shader')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                <span>+</span><span>Browse Shaders</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="installed-shaders-container" class="space-y-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- SUB-TAB 4: BROWSE MODRINTH ADDONS -->
+        <div id="edit-tab-content-browse" class="hidden space-y-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative flex-1">
+              <input id="edit-modrinth-search-input" type="text" placeholder="Search mods, resource packs, shaders (e.g. Complementary, Sodium, Faithful)..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-500 shadow-inner">
+            </div>
+            <div class="flex items-center space-x-2">
+              <select id="edit-modrinth-type-select" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-2 outline-none">
+                <option value="mod">Mods (Fabric / Forge)</option>
+                <option value="resourcepack">Resource Packs (Textures / UI)</option>
+                <option value="shader">Shaders (Iris / OptiFine)</option>
+              </select>
+              <button id="btn-edit-search-modrinth" onclick="executeEditModrinthSearch()" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition cursor-pointer">Search</button>
+            </div>
+          </div>
+
+          <div id="edit-modrinth-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            <!-- Cards populated dynamically -->
+          </div>
+        </div>
+
+        <!-- SUB-TAB 5: INSTANCE SETTINGS -->
+        <div id="edit-tab-content-settings" class="hidden space-y-5 max-w-2xl">
+          <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4">
+            <h3 class="text-sm font-black text-white uppercase tracking-wider flex items-center space-x-2">
+              <span>⚙️</span><span>Instance Configuration</span>
+            </h3>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Instance Display Name</label>
+              <input id="edit-input-inst-name" type="text" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-bold text-slate-300">Allocated Memory (RAM)</label>
+                <span id="edit-ram-display" class="font-mono text-emerald-400 font-bold text-xs">6 GB</span>
+              </div>
+              <input type="range" id="edit-ram-slider" min="2" max="16" value="6" step="1" oninput="document.getElementById('edit-ram-display').innerText = this.value + ' GB'" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Custom JVM Arguments (Optional)</label>
+              <textarea id="edit-input-jvm-args" rows="2" placeholder="e.g. -XX:+UseZGC -XX:StackShadowPages=32" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl p-3 text-xs font-mono text-slate-100 placeholder-slate-600 outline-none focus:border-emerald-500"></textarea>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between border-t border-slate-800">
+              <button onclick="handleDeleteEditInstance()" class="px-4 py-2 rounded-xl bg-red-950/40 hover:bg-red-900/60 border border-red-700/40 text-red-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>🗑️</span><span>Delete Instance</span>
+              </button>
+              <button onclick="saveInstanceSettings()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= VIEW 3: MULTIPLAYER RADAR ================= -->
+      <section id="view-radar" class="hidden p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-lg font-black text-white">LIVE MULTIPLAYER SERVER RADAR</h2>
+            <p class="text-xs text-slate-400">Copy server IP to clipboard and select a specialized instance to launch</p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <!-- Hypixel -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-lg bg-amber-950/40 border border-amber-500/30 flex items-center justify-center font-bold text-2xl text-amber-400">👑</div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center space-x-2">
+                  <span>Hypixel Network</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold">Online • 42,810 Players</span>
+                </div>
+                <div class="text-xs text-amber-300 font-mono mt-0.5">mc.hypixel.net</div>
+                <div class="text-[10px] text-slate-400">Bedwars, Skyblock, Duels, Classic Games</div>
+              </div>
+            </div>
+            <button onclick="copyAndSelectInstanceForServer('mc.hypixel.net', 'Hypixel Network')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition flex items-center space-x-2 shadow-lg shadow-emerald-500/20 cursor-pointer">
+              <span>📋</span><span>Copy & Launch</span>
+            </button>
+          </div>
+
+          <!-- Wynncraft -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-lg bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-center font-bold text-2xl text-emerald-400">⚔️</div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center space-x-2">
+                  <span>Wynncraft MMORPG</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold">Online • 3,420 Players</span>
+                </div>
+                <div class="text-xs text-emerald-300 font-mono mt-0.5">play.wynncraft.com</div>
+                <div class="text-[10px] text-slate-400">Full Fantasy RPG, Custom Classes, Boss Raids & Quests</div>
+              </div>
+            </div>
+            <button onclick="copyAndSelectInstanceForServer('play.wynncraft.com', 'Wynncraft MMORPG')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition flex items-center space-x-2 shadow-lg shadow-emerald-500/20 cursor-pointer">
+              <span>📋</span><span>Copy & Launch</span>
+            </button>
+          </div>
+
+          <!-- DonutSMP -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-lg bg-purple-950/40 border border-purple-500/30 flex items-center justify-center font-bold text-2xl text-purple-400">🍩</div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center space-x-2">
+                  <span>DonutSMP Network</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold">Online • 14,900 Players</span>
+                </div>
+                <div class="text-xs text-purple-300 font-mono mt-0.5">donutsmp.net</div>
+                <div class="text-[10px] text-slate-400">Hardcore Survival SMP, Crystal PvP, Economy & Clans</div>
+              </div>
+            </div>
+            <button onclick="copyAndSelectInstanceForServer('donutsmp.net', 'DonutSMP Network')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition flex items-center space-x-2 shadow-lg shadow-emerald-500/20 cursor-pointer">
+              <span>📋</span><span>Copy & Launch</span>
+            </button>
+          </div>
+
+          <!-- Hoplite -->
+          <div class="glass-card p-4 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+              <div class="w-12 h-12 rounded-lg bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center font-bold text-2xl text-cyan-400">🛡️</div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center space-x-2">
+                  <span>Hoplite Network</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-mono font-bold">Online • 2,850 Players</span>
+                </div>
+                <div class="text-xs text-cyan-300 font-mono mt-0.5">hoplite.gg</div>
+                <div class="text-[10px] text-slate-400">Competitive Battle Royale, UHC, Custom Legendary Weapons</div>
+              </div>
+            </div>
+            <button onclick="copyAndSelectInstanceForServer('hoplite.gg', 'Hoplite Network')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition flex items-center space-x-2 shadow-lg shadow-emerald-500/20 cursor-pointer">
+              <span>📋</span><span>Copy & Launch</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: JAVA & SETTINGS ================= -->
+      <section id="view-settings" class="hidden p-6 space-y-5">
+        <div class="border-b border-slate-800 pb-3">
+          <h2 class="text-lg font-black text-white">JAVA RUNTIME & PERFORMANCE TUNING</h2>
+          <p class="text-xs text-slate-400">Configure memory allocation, garbage collector flags, and OpenJDK paths</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="glass-card p-4 rounded-xl space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400">Detected Java Environments</h3>
+            <div id="java-list" class="space-y-2"></div>
+          </div>
+
+          <div class="glass-card p-4 rounded-xl space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400">JVM Heap & GC Optimization</h3>
+            <div>
+              <div class="flex justify-between text-xs text-slate-300 mb-1 font-semibold">
+                <span>Maximum Heap Memory (-Xmx)</span>
+                <span id="settings-ram-val" class="text-emerald-400 font-mono font-bold">6.0 GB</span>
+              </div>
+              <input type="range" id="settings-ram-slider" min="2" max="16" value="6" step="1" class="w-full accent-emerald-400 h-2 bg-slate-800 rounded-lg cursor-pointer">
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-slate-300 block mb-1">Garbage Collector Preset</label>
+              <select class="w-full bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-3 py-2 outline-none">
+                <option>ZGC (Low Latency, Zero Stutter) - Recommended for Java 21</option>
+                <option>Shenandoah GC (Ultra-Low Pause)</option>
+                <option>Aikar's Optimized G1GC Flags</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= MODAL: CREATE NEW INSTANCE ================= -->
+  <div id="modal-create-instance" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 border border-emerald-500/40 shadow-2xl space-y-5 animate-in fade-in zoom-in-95">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <span class="text-xl">🟩</span>
+          <h3 class="text-base font-black text-white">CREATE MINECRAFT INSTANCE</h3>
+        </div>
+        <button onclick="closeCreateInstanceModal()" class="text-slate-400 hover:text-white text-lg">✕</button>
+      </div>
+
+      <!-- Form -->
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Instance Name</label>
+          <input id="input-inst-name" type="text" placeholder="e.g. My Survival World" class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-3.5 py-2.5 text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-slate-300 font-bold">Minecraft Version</label>
+              <select id="select-version-category" onchange="filterVersionList()" class="bg-slate-900 border border-slate-700/60 rounded px-1.5 py-0.5 text-[10px] text-emerald-400 font-mono outline-none">
+                <option value="release">Releases (Official)</option>
+                <option value="snapshot">Snapshots</option>
+                <option value="beta-alpha">Betas / Alphas</option>
+                <option value="all">All Versions</option>
+              </select>
+            </div>
+            <input id="input-version-search" type="text" placeholder="🔍 Filter version (e.g. 1.8.9, 1.16.5, 1.21)..." oninput="filterVersionList()" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-[11px] text-slate-200 placeholder-slate-500 mb-1.5 outline-none focus:border-emerald-500 font-mono">
+            <select id="select-inst-version" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2 text-slate-100 outline-none focus:border-emerald-500 font-mono text-xs">
+              <option value="26.3">26.3 ★ (Latest Release)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-slate-300 font-bold mb-1">Modloader</label>
+            <select id="select-inst-loader" onchange="updateLoaderHint()" class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2.5 text-slate-100 outline-none focus:border-emerald-500">
+              <option value="Vanilla">Vanilla (Official)</option>
+              <option value="Fabric">Fabric (Mods & Modern Shaders)</option>
+              <option value="OptiFine">OptiFine (Shaders & FPS Boost)</option>
+              <option value="Forge">Forge</option>
+            </select>
+            <div class="text-[10px] text-slate-400 mt-1.5 flex items-center space-x-1">
+              <span>⚡</span><span id="loader-hint-text">Pure official Mojang vanilla client.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-bold mb-1">Allocated Memory (RAM)</label>
+          <div class="flex items-center space-x-3">
+            <input type="range" id="input-inst-ram" min="2" max="16" value="6" step="1" oninput="document.getElementById('ram-inst-val').innerText = this.value + ' GB'" class="flex-1 accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+            <span id="ram-inst-val" class="font-mono text-emerald-400 font-bold w-12 text-right">6 GB</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex justify-end space-x-3 pt-3 border-t border-slate-800">
+        <button onclick="closeCreateInstanceModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition">Cancel</button>
+        <button onclick="submitCreateInstance()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider transition">Create Instance</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: FIRST LAUNCH AUTHENTICATION (IDP ONLY) ================= -->
+  <div id="modal-login" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+    <div class="glass-card w-full max-w-md rounded-2xl p-7 border border-emerald-500/40 shadow-2xl space-y-6 text-center">
+      
+      <!-- Brand Logo -->
+      <div class="flex flex-col items-center">
+        <div class="voxel-icon w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-700 p-1 shadow-xl shadow-emerald-500/30 flex items-center justify-center border border-emerald-300/50 mb-3">
+          <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <h2 class="text-2xl font-black tracking-tight text-white">SIGN IN WITH MICROSOFT</h2>
+        <p class="text-xs text-slate-400 mt-1">Official Minecraft Java Edition Authentication</p>
+      </div>
+
+      <!-- IdP Login Action -->
+      <div class="space-y-4">
+        <!-- Microsoft Direct Popup IdP Button -->
+        <button id="btn-login-ms" onclick="startMicrosoftPopupAuth()" class="w-full flex items-center justify-center space-x-3 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-emerald-500/25 transition-all transform hover:scale-[1.01] active:scale-[0.99]">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 23 23">
+            <path fill="#f35325" d="M1 1h10v10H1z"/>
+            <path fill="#81bc06" d="M12 1h10v10H12z"/>
+            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+            <path fill="#ffba08" d="M12 12h10v10H12z"/>
+          </svg>
+          <span id="btn-login-text">CONTINUE WITH MICROSOFT ACCOUNT</span>
+        </button>
+
+        <!-- Loading indicator (hidden by default) -->
+        <div id="login-loading-state" class="hidden flex items-center justify-center space-x-2 text-xs text-emerald-400 py-2">
+          <div class="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+          <span id="login-loading-text">Connecting to Microsoft Identity Provider...</span>
+        </div>
+
+        <!-- Anti-Piracy Policy Notice -->
+        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-left space-y-1.5">
+          <div class="flex items-center space-x-2 text-emerald-400 font-bold text-xs">
+            <span>🛡️</span><span>Official Game License Required</span>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Aether Launcher authenticates directly with Mojang & Xbox Live identity servers. An active Minecraft Java Edition license is verified before play. Guest and unauthenticated logins are disabled.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EMERGENCY KILL SWITCH (UNSAFE WARNING) ================= -->
+  <div id="modal-kill-switch" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+    <div class="glass-card w-full max-w-md rounded-2xl p-6 border-2 border-red-500/80 shadow-[0_0_50px_rgba(239,68,68,0.35)] space-y-5 animate-in fade-in zoom-in-95">
+      
+      <!-- Warning Header -->
+      <div class="flex items-start space-x-3.5">
+        <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/50 flex items-center justify-center text-2xl flex-shrink-0 animate-pulse text-red-400">
+          ⚠️
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h3 class="text-base font-black text-white tracking-wide">EMERGENCY KILL SWITCH</h3>
+            <span class="px-2 py-0.5 rounded bg-red-600/30 border border-red-500 text-red-300 font-mono text-[9px] font-black tracking-widest uppercase">
+              UNSAFE OPERATION
+            </span>
+          </div>
+          <p class="text-xs text-red-300/80 mt-0.5">Force terminate running Minecraft process tree</p>
+        </div>
+      </div>
+
+      <!-- Warning Description Card -->
+      <div class="p-4 rounded-xl bg-red-950/40 border border-red-900/60 space-y-2 text-xs text-slate-300 leading-relaxed">
+        <div class="font-bold text-red-400 flex items-center space-x-1.5">
+          <span>🚨</span><span>CRITICAL WARNING: RISK OF DATA CORRUPTION</span>
+        </div>
+        <p class="text-[11px] text-slate-300">
+          This operation will immediately kill the active Java process (<code class="text-red-300 font-mono">taskkill /F /T</code>) without allowing the game engine to flush chunk caches or save world data.
+        </p>
+        <ul class="text-[11px] text-slate-400 list-disc list-inside space-y-1 pt-1 font-mono">
+          <li>Unsaved world chunks may corrupt or reset.</li>
+          <li>Player inventories & advancements will revert.</li>
+          <li>Active network sockets disconnect abruptly.</li>
+        </ul>
+        <p class="text-[11px] text-amber-300/90 font-medium pt-1">
+          Only perform this action if Minecraft is completely frozen, crashed, or unresponsive.
+        </p>
+      </div>
+
+      <!-- Modal Action Buttons -->
+      <div class="flex items-center justify-end space-x-3 pt-2">
+        <button onclick="closeKillSwitchModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition cursor-pointer">
+          Cancel (Keep Running)
+        </button>
+        <button id="btn-confirm-kill" onclick="confirmKillCurrentInstance()" class="kill-switch-btn px-5 py-2.5 rounded-xl text-white font-black text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg shadow-red-950/80 transition active:scale-95 cursor-pointer">
+          <span>⚡</span>
+          <span>FORCE TERMINATE NOW</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CUSTOM OBSIDIAN CONFIRMATION & ALERT DIALOG ================= -->
+  <div id="modal-custom-dialog" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div id="custom-dialog-card" class="glass-card w-full max-w-md rounded-2xl p-6 border border-slate-700/80 shadow-[0_0_50px_rgba(0,0,0,0.8)] space-y-5 animate-in fade-in zoom-in-95">
+      
+      <!-- Dialog Header with Icon -->
+      <div class="flex items-start space-x-3.5">
+        <div id="custom-dialog-icon-wrapper" class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0 bg-red-500/20 border border-red-500/40 text-red-400">
+          <span id="custom-dialog-icon">🗑️</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center space-x-2">
+            <h3 id="custom-dialog-title" class="text-base font-black text-white tracking-wide truncate">CONFIRM ACTION</h3>
+            <span id="custom-dialog-badge" class="px-2 py-0.5 rounded font-mono text-[9px] font-black tracking-widest uppercase bg-red-950/80 text-red-400 border border-red-700/50">
+              DELETE
+            </span>
+          </div>
+          <p id="custom-dialog-subtitle" class="text-xs text-slate-400 mt-0.5">Please review before continuing</p>
+        </div>
+      </div>
+
+      <!-- Dialog Message Body -->
+      <div id="custom-dialog-body" class="p-4 rounded-xl border border-slate-800 bg-slate-900/60 space-y-2 text-xs leading-relaxed">
+        <p id="custom-dialog-message" class="text-slate-200 text-xs font-medium break-words"></p>
+        <p id="custom-dialog-subtext" class="text-[11px] text-slate-400 font-mono break-words"></p>
+      </div>
+
+      <!-- Dialog Action Buttons -->
+      <div class="flex items-center justify-end space-x-3 pt-2">
+        <button id="custom-dialog-btn-cancel" onclick="resolveCustomDialog(false)" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer">
+          Cancel
+        </button>
+        <button id="custom-dialog-btn-confirm" onclick="resolveCustomDialog(true)" class="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider flex items-center space-x-2 transition cursor-pointer bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-950">
+          <span id="custom-dialog-btn-confirm-text">Confirm</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL: SERVER RADAR INSTANCE PICKER ================= -->
+  <div id="modal-select-instance-radar" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="glass-card w-full max-w-lg rounded-2xl p-6 border border-cyan-500/40 shadow-[0_0_50px_rgba(34,211,238,0.2)] space-y-5 animate-in fade-in zoom-in-95">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center space-x-3.5">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400">
+            <span>📡</span>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h3 class="text-base font-black text-white tracking-wide">SELECT INSTANCE TO LAUNCH</h3>
+              <span class="px-2 py-0.5 rounded font-mono text-[9px] font-black tracking-widest uppercase bg-emerald-950/90 text-emerald-400 border border-emerald-700/60">
+                ✓ IP COPIED
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">
+              Server IP <span id="radar-modal-server-ip" class="font-mono font-bold text-cyan-400">mc.hypixel.net</span> copied to clipboard! Choose an instance:
+            </p>
+          </div>
+        </div>
+        <button onclick="closeRadarInstanceModal()" class="text-slate-400 hover:text-white text-sm font-bold px-2 py-1 rounded-lg hover:bg-slate-800/60 transition cursor-pointer">✕</button>
+      </div>
+
+      <div id="radar-modal-instances-list" class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+        <!-- Populated dynamically via app.js -->
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+        <span class="text-[11px] text-slate-400">Game will launch &amp; auto-connect to <strong id="radar-modal-server-name" class="text-white">Server</strong></span>
+        <button onclick="closeRadarInstanceModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition cursor-pointer">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

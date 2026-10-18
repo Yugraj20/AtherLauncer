@@ -16,8 +16,8 @@
     "fabric",
     "forge"
   ],
-  "author": "Aether Contributors",
-  "license": "MIT",
+  "author": "Yugraj Singh Sekhon (Yugraj20)",
+  "license": "SEE LICENSE IN LICENSE",
   "devDependencies": {
     "electron": "^34.2.0",
     "electron-builder": "^26.15.3"

@@ -7,7 +7,7 @@
 [![Minecraft](https://img.shields.io/badge/Minecraft-All%20Versions%20Supported-06b6d4?style=for-the-badge&logo=minecraft)](https://minecraft.net)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-3b82f6?style=for-the-badge&logo=windows)](https://github.com/Yugraj20/AtherLauncer/releases)
 [![Website](https://img.shields.io/badge/3D%20Website-Live%20on%20GitHub%20Pages-8b5cf6?style=for-the-badge&logo=google-chrome)](https://yugraj20.github.io/AtherLauncer/)
-[![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary%20%7C%20All%20Rights%20Reserved-red?style=for-the-badge)](LICENSE)
 
 <br/>
 
@@ -170,10 +170,12 @@ AtherLauncer/
 
 ## ⚖️ Disclaimer & Legal
 
-**Ather Launcher** is an open-source community launcher and is **NOT** an official Minecraft product. It is not approved by or associated with Mojang Studios, Microsoft Corporation, or Modrinth. All Minecraft assets, names, and trademarks belong to Mojang Studios / Microsoft.
+**Ather Launcher** is an independent community launcher and is **NOT** an official Minecraft product. It is not approved by or associated with Mojang Studios, Microsoft Corporation, or Modrinth. All Minecraft assets, names, and trademarks belong to Mojang Studios / Microsoft.
 
 ---
 
 ## 📜 License
 
-Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+Copyright © 2026 Yugraj Singh Sekhon (Yugraj20). **All Rights Reserved.**
+
+This software and its source code are proprietary. Copying, duplicating, selling, sublicensing, modifying, or unauthorized commercial distribution is strictly prohibited. See [`LICENSE`](LICENSE) for the full legal terms and conditions.

@@ -144,6 +144,7 @@ function getAthersChoiceInstances() {
       jvmArgs: overrides.jvmArgs || '',
       bannerUrl: overrides.bannerUrl || preset.bannerUrl || defaultBanners[idx % defaultBanners.length],
       modsCount: isDownloaded ? installedMods : preset.requiredMods.length,
+      modpacksCount: 1,
       resourcepacksCount: isDownloaded ? installedRp : preset.requiredResourcePacks.length,
       shadersCount: isDownloaded ? installedSp : preset.requiredShaders.length,
       isDownloaded,
@@ -198,6 +199,15 @@ function getInstances() {
           inst.shadersCount = 0;
         }
       } catch (e) { inst.shadersCount = 0; }
+
+      const mpDir = path.join(mcDir, 'modpacks');
+      try {
+        if (fs.existsSync(mpDir)) {
+          inst.modpacksCount = fs.readdirSync(mpDir).filter(f => f.endsWith('.mrpack') || f.endsWith('.zip') || f.endsWith('.disabled')).length;
+        } else {
+          inst.modpacksCount = 0;
+        }
+      } catch (e) { inst.modpacksCount = 0; }
     }
     return list;
   } catch (e) {
@@ -235,7 +245,7 @@ function createInstance({ name, version, loader = 'Vanilla', memoryMin = 2, memo
   // Setup isolated instance folder structure
   const instDir = path.join(INSTANCES_DIR, cleanId);
   const mcDir = path.join(instDir, 'minecraft');
-  ['mods', 'shaderpacks', 'saves', 'resourcepacks'].forEach(sub => {
+  ['mods', 'shaderpacks', 'saves', 'resourcepacks', 'modpacks'].forEach(sub => {
     fs.mkdirSync(path.join(mcDir, sub), { recursive: true });
   });
 
@@ -304,7 +314,7 @@ function getInstanceSubdir(instanceId, subfolder = '') {
 }
 
 function getInstanceAddons(instanceId, folderType = 'mods') {
-  const validFolders = ['mods', 'resourcepacks', 'shaderpacks'];
+  const validFolders = ['mods', 'resourcepacks', 'shaderpacks', 'modpacks'];
   if (!validFolders.includes(folderType)) {
     throw new Error('Invalid folder type: ' + folderType);
   }
@@ -320,13 +330,24 @@ function getInstanceAddons(instanceId, folderType = 'mods') {
   try {
     const files = fs.readdirSync(targetDir);
     return files
-      .filter(f => f.endsWith('.jar') || f.endsWith('.zip') || f.endsWith('.disabled'))
+      .filter(f => f.endsWith('.jar') || f.endsWith('.zip') || f.endsWith('.mrpack') || f.endsWith('.disabled'))
       .map(file => {
         const fullPath = path.join(targetDir, file);
         const stats = fs.statSync(fullPath);
+        const metaPath = path.join(targetDir, file.replace(/\.disabled$/, '').replace(/\.(jar|zip|mrpack)$/, '') + '.json');
+        let meta = null;
+        if (fs.existsSync(metaPath)) {
+          try {
+            meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+          } catch (e) {}
+        }
         return {
           filename: file,
-          name: file.replace(/\.disabled$/, '').replace(/\.(jar|zip)$/, ''),
+          name: (meta && meta.name) || file.replace(/\.disabled$/, '').replace(/\.(jar|zip|mrpack)$/, ''),
+          version: meta ? meta.version : '',
+          description: meta ? meta.description : '',
+          modsCount: meta ? meta.modsCount : undefined,
+          icon_url: meta ? meta.icon_url : null,
           sizeBytes: stats.size,
           sizeFormatted: (stats.size / (1024 * 1024)).toFixed(2) + ' MB',
           enabled: !file.endsWith('.disabled'),
@@ -339,7 +360,7 @@ function getInstanceAddons(instanceId, folderType = 'mods') {
 }
 
 function toggleInstanceAddon(instanceId, folderType, filename) {
-  const validFolders = ['mods', 'resourcepacks', 'shaderpacks'];
+  const validFolders = ['mods', 'resourcepacks', 'shaderpacks', 'modpacks'];
   if (!validFolders.includes(folderType)) return { success: false, error: 'Invalid folder type' };
 
   const targetDir = path.join(INSTANCES_DIR, instanceId, 'minecraft', folderType);
@@ -357,13 +378,17 @@ function toggleInstanceAddon(instanceId, folderType, filename) {
 }
 
 function deleteInstanceAddon(instanceId, folderType, filename) {
-  const validFolders = ['mods', 'resourcepacks', 'shaderpacks'];
+  const validFolders = ['mods', 'resourcepacks', 'shaderpacks', 'modpacks'];
   if (!validFolders.includes(folderType)) return { success: false, error: 'Invalid folder type' };
 
   const targetDir = path.join(INSTANCES_DIR, instanceId, 'minecraft', folderType);
   const target = path.join(targetDir, filename);
   if (fs.existsSync(target)) {
     fs.unlinkSync(target);
+    const metaPath = path.join(targetDir, filename.replace(/\.disabled$/, '').replace(/\.(jar|zip|mrpack)$/, '') + '.json');
+    if (fs.existsSync(metaPath)) {
+      try { fs.unlinkSync(metaPath); } catch (e) {}
+    }
     return { success: true };
   }
   return { success: false, error: 'File not found' };

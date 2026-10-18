@@ -395,6 +395,7 @@ async function loadInstances() {
           <div class="flex justify-between items-center text-[10px] text-slate-400 mt-1">
             <span class="flex items-center space-x-1.5 truncate">
               <span>🧩 ${inst.modsCount || 0}</span>
+              ${inst.modpacksCount ? `<span>•</span><span>📦 ${inst.modpacksCount}</span>` : ''}
               <span>•</span>
               <span>🎨 ${inst.resourcepacksCount || 0}</span>
               <span>•</span>
@@ -457,6 +458,7 @@ async function loadInstances() {
           <div class="flex justify-between items-center text-[10px] text-slate-400 mt-1">
             <span class="flex items-center space-x-1.5 truncate">
               <span>🧩 ${inst.modsCount || 0}</span>
+              ${inst.modpacksCount ? `<span>•</span><span>📦 ${inst.modpacksCount}</span>` : ''}
               <span>•</span>
               <span>🎨 ${inst.resourcepacksCount || 0}</span>
               <span>•</span>
@@ -527,7 +529,12 @@ function updateHeroBanner(inst) {
   document.getElementById('hero-loader-badge').innerText = inst.isAthersChoice
     ? `✨ ATHER'S CHOICE • ${inst.loader} ${inst.version}`.toUpperCase()
     : `${inst.loader} ${inst.version}`.toUpperCase();
-  document.getElementById('hero-mods-badge').innerText = `${inst.modsCount || 0} MODS • ${inst.resourcepacksCount || 0} PACKS`;
+  const packParts = [
+    `${inst.modsCount || 0} MODS`,
+    (inst.modpacksCount || 0) > 0 ? `${inst.modpacksCount} MODPACKS` : null,
+    `${inst.resourcepacksCount || 0} PACKS`
+  ].filter(Boolean);
+  document.getElementById('hero-mods-badge').innerText = packParts.join(' • ');
 
   const shaderBadge = document.getElementById('hero-shaders-badge');
   if ((inst.shadersCount || 0) > 0) {
@@ -1036,6 +1043,7 @@ let currentEditInstanceId = null;
 let currentEditInstance = null;
 let currentInstalledAddons = {
   mods: [],
+  modpacks: [],
   resourcepacks: [],
   shaderpacks: []
 };
@@ -1079,9 +1087,10 @@ async function openEditInstancePage(instanceId) {
   // Default to Installed Mods tab
   switchEditTab('mods');
 
-  // Load all 3 addon lists in parallel to update counts immediately
+  // Load all 4 addon lists in parallel to update counts immediately
   await Promise.all([
     refreshInstalledAddonsList('mods'),
+    refreshInstalledAddonsList('modpacks'),
     refreshInstalledAddonsList('resourcepacks'),
     refreshInstalledAddonsList('shaderpacks')
   ]);
@@ -1095,7 +1104,7 @@ function closeEditInstancePage() {
 }
 
 function switchEditTab(tabName) {
-  const tabs = ['mods', 'resourcepacks', 'shaders', 'browse', 'settings'];
+  const tabs = ['mods', 'modpacks', 'resourcepacks', 'shaders', 'browse', 'settings'];
   tabs.forEach(t => {
     const content = document.getElementById(`edit-tab-content-${t}`);
     const btn = document.getElementById(`edit-tab-btn-${t}`);
@@ -1129,9 +1138,11 @@ function browseModrinthCategory(category) {
 async function refreshInstalledAddonsList(folderType) {
   if (!currentEditInstanceId) return;
   const containerId = folderType === 'mods' ? 'installed-mods-container' :
+                      folderType === 'modpacks' ? 'installed-modpacks-container' :
                       folderType === 'resourcepacks' ? 'installed-resourcepacks-container' :
                       'installed-shaders-container';
   const countBadgeId = folderType === 'mods' ? 'edit-installed-mods-count' :
+                       folderType === 'modpacks' ? 'edit-installed-modpacks-count' :
                        folderType === 'resourcepacks' ? 'edit-installed-resourcepacks-count' :
                        'edit-installed-shaders-count';
 
@@ -1150,6 +1161,7 @@ async function refreshInstalledAddonsList(folderType) {
 
 function filterInstalledAddonsList(folderType) {
   const inputId = folderType === 'mods' ? 'input-filter-installed-mods' :
+                  folderType === 'modpacks' ? 'input-filter-installed-modpacks' :
                   folderType === 'resourcepacks' ? 'input-filter-installed-resourcepacks' :
                   'input-filter-installed-shaders';
   const query = document.getElementById(inputId)?.value.toLowerCase().trim() || '';
@@ -1164,44 +1176,55 @@ function filterInstalledAddonsList(folderType) {
 
 function renderInstalledAddons(folderType, items) {
   const containerId = folderType === 'mods' ? 'installed-mods-container' :
+                      folderType === 'modpacks' ? 'installed-modpacks-container' :
                       folderType === 'resourcepacks' ? 'installed-resourcepacks-container' :
                       'installed-shaders-container';
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
 
-  const label = folderType === 'mods' ? 'Mods' : folderType === 'resourcepacks' ? 'Resource Packs' : 'Shaders';
-  const icon = folderType === 'mods' ? '🧩' : folderType === 'resourcepacks' ? '🎨' : '✨';
-  const modrinthCat = folderType === 'mods' ? 'mod' : folderType === 'resourcepacks' ? 'resourcepack' : 'shader';
+  const label = folderType === 'mods' ? 'Mods' :
+                folderType === 'modpacks' ? 'Modpacks' :
+                folderType === 'resourcepacks' ? 'Resource Packs' : 'Shaders';
+  const icon = folderType === 'mods' ? '🧩' :
+               folderType === 'modpacks' ? '📦' :
+               folderType === 'resourcepacks' ? '🎨' : '✨';
+  const modrinthCat = folderType === 'mods' ? 'mod' :
+                      folderType === 'modpacks' ? 'modpack' :
+                      folderType === 'resourcepacks' ? 'resourcepack' : 'shader';
 
   if (!items || items.length === 0) {
     if (currentEditInstance && currentEditInstance.isAthersChoice) {
       const reqList = folderType === 'mods'
         ? (currentEditInstance.requiredMods || [])
+        : folderType === 'modpacks'
+        ? (currentEditInstance.requiredModpacks || [])
         : folderType === 'resourcepacks'
         ? (currentEditInstance.requiredResourcePacks || [])
         : (currentEditInstance.requiredShaders || []);
-      container.innerHTML = `
-        <div class="glass-card rounded-2xl p-8 text-center flex flex-col items-center justify-center space-y-3 max-w-lg mx-auto my-4 border border-cyan-500/30">
-          <span class="text-3xl">${icon}</span>
-          <div>
-            <h4 class="text-sm font-bold text-white">${reqList.length} Required ${label} Ready to Auto-Download</h4>
-            <p class="text-xs text-slate-400 mt-1">Click <strong class="text-emerald-400">PLAY</strong> to automatically download these ${reqList.length} ${label.toLowerCase()} for <strong class="text-cyan-300">${currentEditInstance.name}</strong>:</p>
+      if (reqList && reqList.length > 0) {
+        container.innerHTML = `
+          <div class="glass-card rounded-2xl p-8 text-center flex flex-col items-center justify-center space-y-3 max-w-lg mx-auto my-4 border border-cyan-500/30">
+            <span class="text-3xl">${icon}</span>
+            <div>
+              <h4 class="text-sm font-bold text-white">${reqList.length} Required ${label} Ready to Auto-Download</h4>
+              <p class="text-xs text-slate-400 mt-1">Click <strong class="text-emerald-400">PLAY</strong> to automatically download these ${reqList.length} ${label.toLowerCase()} for <strong class="text-cyan-300">${currentEditInstance.name}</strong>:</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-1.5 pt-1 max-w-md">
+              ${reqList.map(slug => `<span class="px-2 py-0.5 rounded-md bg-slate-900 border border-cyan-500/30 text-cyan-300 font-mono text-[10px]">${slug}</span>`).join('')}
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <button onclick="openEditInstanceFolder('${folderType}')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-semibold text-xs transition cursor-pointer">
+                📂 Open ${label} Folder
+              </button>
+              <button onclick="launchFromEditPage()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 cursor-pointer">
+                ▶ Download &amp; Play Now
+              </button>
+            </div>
           </div>
-          <div class="flex flex-wrap justify-center gap-1.5 pt-1 max-w-md">
-            ${reqList.map(slug => `<span class="px-2 py-0.5 rounded-md bg-slate-900 border border-cyan-500/30 text-cyan-300 font-mono text-[10px]">${slug}</span>`).join('')}
-          </div>
-          <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
-            <button onclick="openEditInstanceFolder('${folderType}')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-semibold text-xs transition cursor-pointer">
-              📂 Open ${label} Folder
-            </button>
-            <button onclick="launchFromEditPage()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs transition shadow-lg shadow-emerald-500/20 cursor-pointer">
-              ▶ Download &amp; Play Now
-            </button>
-          </div>
-        </div>
-      `;
-      return;
+        `;
+        return;
+      }
     }
 
     container.innerHTML = `
@@ -1374,6 +1397,7 @@ async function executeEditModrinthSearch() {
           showToast(`Successfully installed ${item.title}!`, 'success');
           await Promise.all([
             refreshInstalledAddonsList('mods'),
+            refreshInstalledAddonsList('modpacks'),
             refreshInstalledAddonsList('resourcepacks'),
             refreshInstalledAddonsList('shaderpacks')
           ]);
@@ -1503,7 +1527,8 @@ async function copyAndSelectInstanceForServer(serverAddress, serverName = 'Serve
               <span class="px-1.5 py-0.5 rounded font-mono text-[9px] font-bold border ${badgeColor}">${loaderBadge}</span>
             </div>
             <div class="text-[10px] text-slate-400 mt-0.5 flex items-center space-x-2">
-              <span>📦 ${modsCount} Mods</span>
+              <span>🧩 ${modsCount} Mods</span>
+              ${inst.modpacksCount ? `<span>•</span><span>📦 ${inst.modpacksCount} Modpacks</span>` : ''}
               <span>•</span>
               <span>🎨 ${rpCount} Packs</span>
               <span>•</span>

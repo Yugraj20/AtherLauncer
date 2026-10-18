@@ -311,6 +311,10 @@
             <span>🧩</span><span>Installed Mods</span>
             <span id="edit-installed-mods-count" class="px-1.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 font-mono text-[10px]">0</span>
           </button>
+          <button id="edit-tab-btn-modpacks" onclick="switchEditTab('modpacks')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
+            <span>📦</span><span>Modpacks</span>
+            <span id="edit-installed-modpacks-count" class="px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px]">0</span>
+          </button>
           <button id="edit-tab-btn-resourcepacks" onclick="switchEditTab('resourcepacks')" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl hover:bg-slate-800/50 text-slate-400 hover:text-slate-200 font-medium text-xs transition cursor-pointer flex-shrink-0">
             <span>🎨</span><span>Resource Packs</span>
             <span id="edit-installed-resourcepacks-count" class="px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono text-[10px]">0</span>
@@ -351,7 +355,31 @@
           </div>
         </div>
 
-        <!-- SUB-TAB 2: INSTALLED RESOURCE PACKS -->
+        <!-- SUB-TAB 2: INSTALLED MODPACKS -->
+        <div id="edit-tab-content-modpacks" class="hidden space-y-4">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="relative w-full sm:w-80">
+              <input id="input-filter-installed-modpacks" oninput="filterInstalledAddonsList('modpacks')" type="text" placeholder="Filter installed modpacks (.mrpack)..." class="w-full bg-slate-900 border border-slate-700/80 rounded-xl px-3.5 py-2 text-xs text-slate-200 placeholder-slate-500 outline-none focus:border-emerald-500">
+            </div>
+            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+              <button onclick="openEditInstanceFolder('modpacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>📂</span><span>Modpacks Folder</span>
+              </button>
+              <button onclick="refreshInstalledAddonsList('modpacks')" class="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 text-xs font-semibold flex items-center space-x-1.5 transition cursor-pointer">
+                <span>🔄</span><span>Refresh</span>
+              </button>
+              <button onclick="browseModrinthCategory('modpack')" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-500/20 transition cursor-pointer">
+                <span>+</span><span>Browse Modpacks</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="installed-modpacks-container" class="space-y-2">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- SUB-TAB 3: INSTALLED RESOURCE PACKS -->
         <div id="edit-tab-content-resourcepacks" class="hidden space-y-4">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative w-full sm:w-80">
@@ -375,7 +403,7 @@
           </div>
         </div>
 
-        <!-- SUB-TAB 3: INSTALLED SHADERS -->
+        <!-- SUB-TAB 4: INSTALLED SHADERS -->
         <div id="edit-tab-content-shaders" class="hidden space-y-4">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative w-full sm:w-80">
@@ -399,15 +427,16 @@
           </div>
         </div>
 
-        <!-- SUB-TAB 4: BROWSE MODRINTH ADDONS -->
+        <!-- SUB-TAB 5: BROWSE MODRINTH ADDONS -->
         <div id="edit-tab-content-browse" class="hidden space-y-4">
           <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="relative flex-1">
-              <input id="edit-modrinth-search-input" type="text" placeholder="Search mods, resource packs, shaders (e.g. Complementary, Sodium, Faithful)..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-500 shadow-inner">
+              <input id="edit-modrinth-search-input" type="text" placeholder="Search mods, modpacks, resource packs, shaders (e.g. Cobblemon, Complementary, Sodium)..." class="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 outline-none focus:border-emerald-500 shadow-inner">
             </div>
             <div class="flex items-center space-x-2">
               <select id="edit-modrinth-type-select" class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-2 outline-none">
                 <option value="mod">Mods (Fabric / Forge)</option>
+                <option value="modpack">Modpacks (.mrpack)</option>
                 <option value="resourcepack">Resource Packs (Textures / UI)</option>
                 <option value="shader">Shaders (Iris / OptiFine)</option>
               </select>

@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ather Launcher — The Next-Gen Minecraft Client & Modding Experience</title>
+  <meta name="description" content="Ather Launcher is a sleek, high-performance Obsidian & Emerald Minecraft client with built-in Modrinth engine, curated cloud modpacks, emergency kill switch, and live server radar.">
+
+  <!-- OpenGraph / Social Meta -->
+  <meta property="og:title" content="Ather Launcher — Next-Gen Minecraft Client">
+  <meta property="og:description" content="Obsidian glass UI, Modrinth integration, Ather's Choice 26.3 modpacks, emergency kill switch, and live server radar.">
+  <meta property="og:image" content="https://yugraj20.github.io/AtherLauncer/assets/launcher-screenshot.png">
+  <meta property="og:url" content="https://yugraj20.github.io/AtherLauncer/">
+  <meta name="theme-color" content="#07090e">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+
+    :root {
+      --primary: #10b981;
+      --cyan: #06b6d4;
+      --purple: #a855f7;
+      --obsidian: #07090e;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #07090e;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-nav {
+      background: rgba(7, 9, 14, 0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: rgba(13, 17, 27, 0.65);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 12px 40px -10px rgba(16, 185, 129, 0.15);
+      transform: translateY(-3px);
+    }
+
+    .glass-card-cyan:hover {
+      border-color: rgba(6, 182, 212, 0.5);
+      box-shadow: 0 12px 40px -10px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Glow Effects */
+    .glow-emerald {
+      box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.4);
+    }
+
+    .glow-cyan {
+      box-shadow: 0 0 50px -10px rgba(6, 182, 212, 0.3);
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #34d399 0%, #22d3ee 50%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .text-gradient-cyan {
+      background: linear-gradient(135deg, #22d3ee 0%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Background Ambient Gradients */
+    .bg-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+
+    /* 3D Canvas Container */
+    #webgl-canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: auto;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body class="bg-[#07090e] text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- ================= TOP NAVIGATION ================= -->
+  <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-cyan-400 to-emerald-600 p-[1px] shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
+          <div class="w-full h-full bg-[#07090e] rounded-xl flex items-center justify-center font-black text-emerald-400 text-lg">
+            ⚡
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-black text-lg tracking-wider text-white group-hover:text-emerald-400 transition">
+            ATHER <span class="text-emerald-400">LAUNCHER</span>
+          </span>
+          <span class="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-1">
+            Minecraft 26.3 Client
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-wider text-slate-300">
+        <a href="#features" class="hover:text-emerald-400 transition">Features</a>
+        <a href="#athers-choice" class="hover:text-cyan-400 transition flex items-center space-x-1.5">
+          <span>✨</span><span>Ather's Choice</span>
+        </a>
+        <a href="#radar" class="hover:text-emerald-400 transition">Server Radar</a>
+        <a href="#3d-interactive" class="hover:text-purple-400 transition">3D Inspector</a>
+        <a href="#specs" class="hover:text-emerald-400 transition">Specifications</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <a href="https://github.com/Yugraj20/AtherLauncer" target="_blank" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition flex items-center space-x-2 text-xs font-bold" title="GitHub Repository">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span class="hidden sm:inline">Star</span>
+        </a>
+
+        <a href="#download" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center space-x-2 shadow-lg shadow-emerald-500/25 transition active:scale-95">
+          <span>⚡</span>
+          <span>Download v1.0.0</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION WITH 3D CANVAS ================= -->
+  <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-grid">
+    
+    <!-- Three.js 3D Interactive Canvas -->
+    <div id="webgl-canvas-container"></div>
+
+    <!-- Soft Vignette & Gradient Overlays -->
+    <div class="absolute inset-0 bg-gradient-to-t from-[#07090e] via-transparent to-[#07090e]/60 pointer-events-none z-10"></div>
+    <div class="absolute inset-0 bg-radial from-transparent via-[#07090e]/40 to-[#07090e] pointer-events-none z-10"></div>
+
+    <!-- Hero Content Overlay -->
+    <div class="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-8 mt-10 pointer-events-auto">
+      
+      <!-- Top Pill Badge -->
+      <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-mono text-xs font-bold shadow-lg shadow-emerald-500/10 backdrop-blur-md animate-bounce">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>OFFICIAL V1.0.0 RELEASE • MINECRAFT 26.3 FABRIC READY</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white">
+        MINECRAFT CLIENT <br/>
+        <span class="text-gradient">RE-ENGINEERED IN 3D</span>
+      </h1>
+
+      <!-- Subtitle Description -->
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        Ather Launcher blends obsidian glassmorphic design with native <strong>Modrinth ecosystem integration</strong>, on-demand <strong>Ather's Choice modpacks</strong>, live <strong>Server Radar</strong>, and an emergency <strong>process kill switch</strong>.
+      </p>
+
+      <!-- Dual Download CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        
+        <!-- Primary: Installer EXE -->
+        <a href="https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether.Launcher.Setup.1.0.0.exe" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center space-x-3 shadow-xl shadow-emerald-500/30 transition transform hover:-translate-y-0.5 active:scale-95 group">
+          <span class="text-xl">⚡</span>
+          <div class="text-left">
+            <div class="text-xs opacity-80 leading-none">Windows Installer</div>
+            <div class="font-black text-sm">Download Setup (.exe)</div>
+          </div>
+          <span class="ml-2 text-xs px-2 py-0.5 rounded bg-slate-950/20 font-mono font-bold">87 MB</span>
+        </a>
+
+        <!-- Secondary: Portable ZIP -->
+        <a href="https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether-Launcher-1.0.0-Portable.zip" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-white font-black text-sm uppercase tracking-wider flex items-center justify-center space-x-3 border border-slate-700/80 shadow-xl transition transform hover:-translate-y-0.5 active:scale-95 group">
+          <span class="text-xl">📦</span>
+          <div class="text-left">
+            <div class="text-xs text-slate-400 leading-none">No Install Required</div>
+            <div class="font-black text-sm">Portable Archive (.zip)</div>
+          </div>
+          <span class="ml-2 text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono font-bold">123 MB</span>
+        </a>
+
+      </div>
+
+      <!-- Feature Pill Checklist -->
+      <div class="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs font-semibold text-slate-400">
+        <span class="flex items-center space-x-2">
+          <span class="text-emerald-400">✓</span>
+          <span>Zero Piracy (Official MSA OAuth2)</span>
+        </span>
+        <span class="flex items-center space-x-2">
+          <span class="text-cyan-400">✓</span>
+          <span>Automatic Java 8/17/21/25 Selector</span>
+        </span>
+        <span class="flex items-center space-x-2">
+          <span class="text-purple-400">✓</span>
+          <span>100% Free &amp; Open Source (MIT)</span>
+        </span>
+      </div>
+
+      <!-- Interactive 3D Block Selector Bar -->
+      <div id="3d-interactive" class="pt-8">
+        <div class="inline-flex items-center p-1.5 rounded-2xl bg-slate-950/80 border border-slate-800/80 backdrop-blur-md space-x-1.5 shadow-2xl">
+          <span class="text-[11px] font-mono font-bold text-slate-400 px-3 hidden sm:inline">3D BLOCK:</span>
+          <button onclick="setBlockType('grass')" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs transition" id="btn-3d-grass">🌱 Grass</button>
+          <button onclick="setBlockType('diamond')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition" id="btn-3d-diamond">💎 Diamond</button>
+          <button onclick="setBlockType('obsidian')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition" id="btn-3d-obsidian">🌌 Obsidian</button>
+          <button onclick="setBlockType('amethyst')" class="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition" id="btn-3d-amethyst">🔮 Amethyst</button>
+          <button onclick="burstParticles()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs transition">💥 Burst</button>
+        </div>
+        <p class="text-[11px] text-slate-500 mt-2 font-mono">Drag mouse to orbit the 3D block • Click anywhere to trigger interactive particle bursts</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ================= APP PREVIEW HERO SHOWCASE ================= -->
+  <section class="relative py-16 -mt-10 z-20 max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="rounded-3xl p-2 sm:p-3 bg-gradient-to-b from-emerald-500/20 via-cyan-500/10 to-transparent border border-slate-700/60 shadow-[0_20px_80px_rgba(0,0,0,0.9)]">
+      <div class="rounded-2xl overflow-hidden bg-slate-950 border border-white/10 relative group">
+        <img src="assets/launcher-screenshot.png" alt="Ather Launcher Dashboard" class="w-full h-auto object-cover transform group-hover:scale-[1.01] transition duration-700">
+        
+        <!-- Top Floating Overlay Badge -->
+        <div class="absolute top-4 left-4 flex items-center space-x-2 px-3.5 py-1.5 rounded-xl bg-black/85 backdrop-blur-md border border-emerald-500/40 text-emerald-300 font-mono text-xs font-bold shadow-lg">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span>LIVE DESKTOP ENGINE (ELECTRON + NODE.JS)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ATHER'S CHOICE CURATED PRESETS ================= -->
+  <section id="athers-choice" class="py-24 relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col items-center text-center space-y-4 mb-16">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold">
+        <span>✨</span>
+        <span>EXCLUSIVE OUT-OF-THE-BOX FEATURE</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        "ATHER'S CHOICE" <span class="text-gradient-cyan">CURATED MODPACKS</span>
+      </h2>
+      <p class="text-sm sm:text-base text-slate-400 max-w-2xl">
+        Every copy of Ather Launcher includes 5 official, battle-tested Minecraft 26.3 configurations. No manual installation required — clicking <strong>PLAY</strong> triggers an automatic high-speed cloud download of all required mods, resource packs, and shaders.
+      </p>
+    </div>
+
+    <!-- Presets Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Hyperion FPS Boost -->
+      <div class="glass-card glass-card-cyan rounded-3xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="h-44 rounded-2xl overflow-hidden relative mb-4">
+            <img src="assets/hyperion-fps.jpg" alt="Hyperion FPS Boost" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/85 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/40">
+              FABRIC 26.3
+            </span>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-black/85 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-500/40">
+              ☁️ AUTO-DL
+            </span>
+          </div>
+          <h3 class="text-lg font-black text-white group-hover:text-cyan-300 transition">Hyperion FPS Boost 26.3</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Maximum framerate & competitive low-latency preset with Sodium, Lithium, ImmediatelyFast, FerriteCore, Fullbright, and MakeUp UltraFast shaders.
+          </p>
+        </div>
+        <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span class="text-emerald-400 font-bold">📦 9 Mods • 🎨 3 Packs • ✨ 1 Shader</span>
+          <span class="text-slate-400">FPS / PvP</span>
+        </div>
+      </div>
+
+      <!-- Card 2: RTX Cinematic Shaders -->
+      <div class="glass-card glass-card-cyan rounded-3xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="h-44 rounded-2xl overflow-hidden relative mb-4">
+            <img src="assets/rtx-cinematic.jpg" alt="RTX Cinematic Shaders" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/85 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/40">
+              FABRIC 26.3
+            </span>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-black/85 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-500/40">
+              ☁️ AUTO-DL
+            </span>
+          </div>
+          <h3 class="text-lg font-black text-white group-hover:text-cyan-300 transition">RTX Cinematic Shaders 26.3</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Breathtaking raytraced-style visuals powered by Iris Shaders, Complementary Reimagined, BSL Shaders, Fresh Animations, and Dramatic Skys.
+          </p>
+        </div>
+        <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span class="text-cyan-400 font-bold">📦 7 Mods • 🎨 3 Packs • ✨ 2 Shaders</span>
+          <span class="text-slate-400">Raytracing</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Survival+ Explorer -->
+      <div class="glass-card glass-card-cyan rounded-3xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="h-44 rounded-2xl overflow-hidden relative mb-4">
+            <img src="assets/survival-plus.jpg" alt="Survival+ Explorer" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/85 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/40">
+              FABRIC 26.3
+            </span>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-black/85 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-500/40">
+              ☁️ AUTO-DL
+            </span>
+          </div>
+          <h3 class="text-lg font-black text-white group-hover:text-cyan-300 transition">Survival+ Explorer 26.3</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Ultimate survival QoL suite with Xaero's Minimap & World Map, JEI, Jade, AppleSkin, Glowing Ores, and Complementary Unbound.
+          </p>
+        </div>
+        <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span class="text-purple-400 font-bold">📦 9 Mods • 🎨 2 Packs • ✨ 1 Shader</span>
+          <span class="text-slate-400">Survival QoL</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Multiplayer SMP Pro -->
+      <div class="glass-card glass-card-cyan rounded-3xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="h-44 rounded-2xl overflow-hidden relative mb-4">
+            <img src="assets/multiplayer-smp.jpg" alt="Multiplayer SMP Pro" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/85 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/40">
+              FABRIC 26.3
+            </span>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-black/85 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-500/40">
+              ☁️ AUTO-DL
+            </span>
+          </div>
+          <h3 class="text-lg font-black text-white group-hover:text-cyan-300 transition">Multiplayer SMP Pro 26.3</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Tailored for multiplayer servers with Simple Voice Chat, 3D Skin Layers, Not Enough Animations, LowOnFire, and Solas Shaders.
+          </p>
+        </div>
+        <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span class="text-emerald-400 font-bold">📦 8 Mods • 🎨 2 Packs • ✨ 1 Shader</span>
+          <span class="text-slate-400">SMP / Voice</span>
+        </div>
+      </div>
+
+      <!-- Card 5: Realism & Immersion -->
+      <div class="glass-card glass-card-cyan rounded-3xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="h-44 rounded-2xl overflow-hidden relative mb-4">
+            <img src="assets/realism-immersion.jpg" alt="Realism & Immersion" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            <span class="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-black/85 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/40">
+              FABRIC 26.3
+            </span>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-md bg-black/85 text-cyan-300 font-mono text-[10px] font-bold border border-cyan-500/40">
+              ☁️ AUTO-DL
+            </span>
+          </div>
+          <h3 class="text-lg font-black text-white group-hover:text-cyan-300 transition">Realism & Immersion 26.3</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Next-gen atmospheric immersion with Photon & Mellow Shaders, Fresh Animations + Extensions, Entity Model Features, and Dramatic Skys.
+          </p>
+        </div>
+        <div class="pt-4 mt-4 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <span class="text-amber-400 font-bold">📦 7 Mods • 🎨 4 Packs • ✨ 2 Shaders</span>
+          <span class="text-slate-400">Hyper-Realism</span>
+        </div>
+      </div>
+
+      <!-- Card 6: Your Own Custom Instances -->
+      <div class="glass-card rounded-3xl p-6 flex flex-col justify-between border-dashed border-slate-700/80 bg-slate-900/30">
+        <div>
+          <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-3xl mb-4">
+            ➕
+          </div>
+          <h3 class="text-lg font-black text-white">Create Custom Instances</h3>
+          <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+            Want your own bespoke configuration? Ather Launcher lets you create unlimited custom instances for any Minecraft version from 1.7.10 up to 26.3 snapshots, with Vanilla, Fabric, or OptiFine loaders.
+          </p>
+        </div>
+        <div class="pt-6">
+          <a href="#download" class="inline-flex items-center space-x-2 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition">
+            <span>Download Launcher to Build Your Own</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= CORE FEATURES GRID ================= -->
+  <section id="features" class="py-24 relative bg-slate-950/40 border-y border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center space-y-4 mb-16">
+        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          BUILT FOR <span class="text-gradient">SERIOUS MINECRAFTERS</span>
+        </h2>
+        <p class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
+          Every tool, animation, and safeguard has been engineered from the ground up for stability, speed, and aesthetics.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Feature 1: Emergency Kill Switch -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-2xl text-red-400">
+            ⚡
+          </div>
+          <h3 class="text-base font-bold text-white">Emergency Kill Switch</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Instantly terminate frozen or hung Minecraft process trees with a single click. Zero need for Task Manager. Includes a safety warning dialog to prevent accidental clicks.
+          </p>
+        </div>
+
+        <!-- Feature 2: Integrated Modrinth Hub -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl text-emerald-400">
+            🧩
+          </div>
+          <h3 class="text-base font-bold text-white">Integrated Modrinth Hub</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Search, discover, and 1-click install millions of Fabric mods, resource packs, and shaders directly inside your instance without opening your browser.
+          </p>
+        </div>
+
+        <!-- Feature 3: Live Server Radar -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-2xl text-cyan-400">
+            📡
+          </div>
+          <h3 class="text-base font-bold text-white">Server Radar &amp; Copy &amp; Launch</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Monitor real-time online players and ping for popular servers. Click "Copy &amp; Launch" to automatically copy the server address and pick an instance to connect.
+          </p>
+        </div>
+
+        <!-- Feature 4: Smart Java Runtime Manager -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl text-amber-400">
+            ☕
+          </div>
+          <h3 class="text-base font-bold text-white">Smart Java Environment</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Auto-detects Oracle, Adoptium, Zulu, and Microsoft Java installations. Injects mandatory modern Panama and off-heap flags for Java 21 &amp; Java 25.
+          </p>
+        </div>
+
+        <!-- Feature 5: 25-Image Wallpaper Gallery -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-2xl text-purple-300">
+            🎨
+          </div>
+          <h3 class="text-base font-bold text-white">Curated 25-Wallpaper Gallery</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Instances dynamically draw random high-resolution shaders, cherry blossom hills, sunset oceans, and amethyst cave panoramas from a built-in gallery.
+          </p>
+        </div>
+
+        <!-- Feature 6: Anti-Piracy MSA Authentication -->
+        <div class="glass-card rounded-3xl p-6 space-y-3">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-2xl text-blue-300">
+            🛡️
+          </div>
+          <h3 class="text-base font-bold text-white">Official Microsoft OAuth 2.0</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Strict anti-piracy adherence. Connect securely with your official Microsoft account via OAuth 2.0 with cryptographic verification against Mojang servers.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= SERVER RADAR LIVE DEMO ================= -->
+  <section id="radar" class="py-24 relative max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center space-y-3 mb-12">
+      <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-mono text-xs font-bold">
+        <span>📡</span><span>REAL-TIME MULTIPLAYER MONITOR</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">LIVE SERVER RADAR</h2>
+      <p class="text-xs sm:text-sm text-slate-400">Copy server IP and jump directly into game instances with one click.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      
+      <!-- Server 1: Hypixel -->
+      <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl">
+            ⚔️
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white">Hypixel Network</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-400 mt-0.5">mc.hypixel.net • 45,210 Online</div>
+          </div>
+        </div>
+        <button onclick="copyIp('mc.hypixel.net')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-cyan-300 font-mono text-xs font-bold transition">
+          📋 Copy IP
+        </button>
+      </div>
+
+      <!-- Server 2: Wynncraft -->
+      <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl">
+            🏰
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white">Wynncraft MMORPG</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-400 mt-0.5">play.wynncraft.com • 3,180 Online</div>
+          </div>
+        </div>
+        <button onclick="copyIp('play.wynncraft.com')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-cyan-300 font-mono text-xs font-bold transition">
+          📋 Copy IP
+        </button>
+      </div>
+
+      <!-- Server 3: DonutSMP -->
+      <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-2xl">
+            🍩
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white">DonutSMP Hardcore</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-400 mt-0.5">donutsmp.net • 8,420 Online</div>
+          </div>
+        </div>
+        <button onclick="copyIp('donutsmp.net')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-cyan-300 font-mono text-xs font-bold transition">
+          📋 Copy IP
+        </button>
+      </div>
+
+      <!-- Server 4: Hoplite -->
+      <div class="glass-card rounded-2xl p-5 flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-2xl">
+            🛡️
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-white">Hoplite Battle Royale</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            </div>
+            <div class="text-[11px] font-mono text-slate-400 mt-0.5">hoplite.gg • 2,900 Online</div>
+          </div>
+        </div>
+        <button onclick="copyIp('hoplite.gg')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-cyan-300 font-mono text-xs font-bold transition">
+          📋 Copy IP
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= DOWNLOAD & RELEASE MATRIX ================= -->
+  <section id="download" class="py-24 relative bg-slate-950/60 border-t border-slate-800/80">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center space-y-4 mb-14">
+        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight">GET ATHER LAUNCHER TODAY</h2>
+        <p class="text-sm text-slate-400">Choose between the standard Windows installer or the standalone portable edition.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Package 1: Installer -->
+        <div class="glass-card rounded-3xl p-8 flex flex-col justify-between border-2 border-emerald-500/40 shadow-xl shadow-emerald-500/10">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
+                RECOMMENDED
+              </span>
+              <span class="text-xs text-slate-400 font-mono">v1.0.0 • 87 MB</span>
+            </div>
+            <h3 class="text-2xl font-black text-white">Windows Installer</h3>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Standard NSIS installation wizard with automatic desktop shortcuts, start menu integration, and uninstaller.
+            </p>
+            <ul class="space-y-2 mt-6 text-xs text-slate-300 font-medium">
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Automatic Start Menu &amp; Desktop shortcuts</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Self-contained Electron 34 runtime</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Easy 1-click update path</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-8">
+            <a href="https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether.Launcher.Setup.1.0.0.exe" class="w-full py-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition shadow-lg shadow-emerald-500/30 active:scale-95">
+              <span>⚡</span><span>Download Installer (.exe)</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Package 2: Portable ZIP -->
+        <div class="glass-card rounded-3xl p-8 flex flex-col justify-between border border-slate-700/80">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-mono font-bold uppercase tracking-wider">
+                PORTABLE
+              </span>
+              <span class="text-xs text-slate-400 font-mono">v1.0.0 • 123 MB</span>
+            </div>
+            <h3 class="text-2xl font-black text-white">Standalone Portable</h3>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Pre-extracted zero-install directory. Ideal for running from USB flash drives or folders without administrator privileges.
+            </p>
+            <ul class="space-y-2 mt-6 text-xs text-slate-300 font-medium">
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Zero installation required</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Runs on school or locked down PCs</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-emerald-400">✓</span><span>Extract and launch directly</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="pt-8">
+            <a href="https://github.com/Yugraj20/AtherLauncer/releases/download/v1.0.0/Aether-Launcher-1.0.0-Portable.zip" class="w-full py-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition border border-slate-600 active:scale-95">
+              <span>📦</span><span>Download Portable (.zip)</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= TECHNICAL SPECIFICATIONS ================= -->
+  <section id="specs" class="py-20 relative max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center space-y-3 mb-12">
+      <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight uppercase">Technical Specifications</h2>
+      <p class="text-xs text-slate-400 font-mono">Engineered with high performance native Node.js and Electron bindings</p>
+    </div>
+
+    <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+      <div class="divide-y divide-slate-800 text-xs">
+        <div class="grid grid-cols-2 p-4 bg-slate-900/60 font-mono font-bold text-slate-400">
+          <span>Component</span><span>Implementation Details</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Runtime Framework</span>
+          <span class="text-slate-400 font-mono">Electron 34.5.8 + Node.js 20.x + Chromium 134</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Supported OS</span>
+          <span class="text-slate-400 font-mono">Windows 10 / Windows 11 (64-bit)</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Minecraft Versions</span>
+          <span class="text-slate-400 font-mono">Release 26.3, 1.21.x, down to legacy 1.7.10</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Supported Modloaders</span>
+          <span class="text-slate-400 font-mono">Fabric (with ASM collision filter), OptiFine, Vanilla</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Addon Repository</span>
+          <span class="text-slate-400 font-mono">Modrinth REST API v2 (Direct download &amp; SHA1 verification)</span>
+        </div>
+        <div class="grid grid-cols-2 p-4">
+          <span class="font-bold text-slate-200">Authentication Protocol</span>
+          <span class="text-slate-400 font-mono">Official Microsoft OAuth 2.0 (XboxLive / XSTS / Mojang MSA)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-slate-800/80 py-12 bg-[#05070a] text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center space-x-3">
+        <span class="text-lg">⚡</span>
+        <div>
+          <span class="font-bold text-slate-300">Ather Launcher</span>
+          <span class="font-mono text-[10px] ml-2 text-emerald-400">v1.0.0</span>
+          <p class="text-[11px] text-slate-500 mt-0.5">Created by Yugraj Singh Sekhon (Yugraj20). MIT License.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-6 font-semibold">
+        <a href="https://github.com/Yugraj20/AtherLauncer" target="_blank" class="hover:text-emerald-400 transition">GitHub</a>
+        <a href="https://github.com/Yugraj20/AtherLauncer/releases" target="_blank" class="hover:text-emerald-400 transition">Releases</a>
+        <a href="#features" class="hover:text-emerald-400 transition">Features</a>
+        <a href="#download" class="hover:text-emerald-400 transition">Download</a>
+      </div>
+
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pt-6 border-t border-slate-900 text-[11px] text-center text-slate-600">
+      Not an official Minecraft product. Not approved by or associated with Mojang Studios or Microsoft.
+    </div>
+  </footer>
+
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast-notify" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 px-4 py-3 rounded-xl bg-slate-900 border border-emerald-500/40 text-emerald-300 font-mono text-xs shadow-2xl flex items-center space-x-2">
+    <span>✓</span>
+    <span id="toast-notify-text">IP copied to clipboard!</span>
+  </div>
+
+  <!-- ================= THREE.JS 3D SCENE SCRIPT ================= -->
+  <script>
+    let scene, camera, renderer, currentMeshGroup, particleSystem;
+    let targetRotationX = 0.3;
+    let targetRotationY = -0.5;
+    let mouseX = 0, mouseY = 0;
+    let currentBlockType = 'grass';
+
+    function init3DScene() {
+      const container = document.getElementById('webgl-canvas-container');
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
+
+      // 1. Scene & Camera
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 0, 7.5);
+
+      // 2. Renderer
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      // 3. Ambient & Point Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0x34d399, 1.2);
+      sunLight.position.set(5, 8, 6);
+      scene.add(sunLight);
+
+      const cyanPointLight = new THREE.PointLight(0x22d3ee, 2.5, 20);
+      cyanPointLight.position.set(-4, -2, 3);
+      scene.add(cyanPointLight);
+
+      const purplePointLight = new THREE.PointLight(0xa855f7, 2, 20);
+      purplePointLight.position.set(4, -4, -2);
+      scene.add(purplePointLight);
+
+      // 4. Create Initial Block
+      createVoxelBlock('grass');
+
+      // 5. Ambient Stardust Particles
+      createAmbientParticles();
+
+      // 6. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('mousemove', onMouseMove);
+      container.addEventListener('click', burstParticles);
+
+      // 7. Render Loop
+      animate();
+    }
+
+    // Helper: Procedural Canvas Textures for Realistic Minecraft Voxels
+    function createNoiseTexture(baseColor, noiseColor, isGrassSide = false, isGrassTop = false, isDiamond = false) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = baseColor;
+      ctx.fillRect(0, 0, 64, 64);
+
+      // Pixelated noise
+      for (let x = 0; x < 64; x += 4) {
+        for (let y = 0; y < 64; y += 4) {
+          if (Math.random() > 0.4) {
+            ctx.fillStyle = noiseColor;
+            ctx.fillRect(x, y, 4, 4);
+          }
+        }
+      }
+
+      if (isGrassSide) {
+        // Green fringe overhang at top of dirt
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(0, 0, 64, 16);
+        for (let x = 0; x < 64; x += 4) {
+          const dripHeight = Math.floor(Math.random() * 4) * 4;
+          ctx.fillRect(x, 16, 4, dripHeight);
+        }
+      }
+
+      if (isDiamond) {
+        // Glowing cyan diamond veins
+        ctx.fillStyle = '#22d3ee';
+        const spots = [[16, 16], [20, 20], [36, 12], [40, 16], [24, 40], [28, 44], [44, 36], [48, 40]];
+        spots.forEach(([sx, sy]) => {
+          ctx.fillRect(sx, sy, 8, 8);
+        });
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.magFilter = THREE.NearestFilter;
+      texture.minFilter = THREE.NearestFilter;
+      return texture;
+    }
+
+    function createVoxelBlock(type) {
+      if (currentMeshGroup) {
+        scene.remove(currentMeshGroup);
+      }
+
+      currentMeshGroup = new THREE.Group();
+      const geom = new THREE.BoxGeometry(2.2, 2.2, 2.2);
+      let materials;
+
+      if (type === 'grass') {
+        const topTex = createNoiseTexture('#15803d', '#22c55e', false, true);
+        const sideTex = createNoiseTexture('#78350f', '#92400e', true);
+        const bottomTex = createNoiseTexture('#78350f', '#451a03');
+
+        materials = [
+          new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: topTex, roughness: 0.6 }),
+          new THREE.MeshStandardMaterial({ map: bottomTex, roughness: 0.9 }),
+          new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.8 }),
+          new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.8 })
+        ];
+      } else if (type === 'diamond') {
+        const stoneTex = createNoiseTexture('#334155', '#1e293b', false, false, true);
+        materials = new THREE.MeshStandardMaterial({
+          map: stoneTex,
+          emissive: 0x06b6d4,
+          emissiveIntensity: 0.25,
+          roughness: 0.4
+        });
+      } else if (type === 'obsidian') {
+        const obsTex = createNoiseTexture('#1e1b4b', '#0f172a');
+        materials = new THREE.MeshStandardMaterial({
+          map: obsTex,
+          emissive: 0x581c87,
+          emissiveIntensity: 0.35,
+          roughness: 0.2,
+          metalness: 0.3
+        });
+      } else if (type === 'amethyst') {
+        const ameTex = createNoiseTexture('#7c3aed', '#a855f7');
+        materials = new THREE.MeshStandardMaterial({
+          map: ameTex,
+          emissive: 0x9333ea,
+          emissiveIntensity: 0.5,
+          roughness: 0.15,
+          metalness: 0.4
+        });
+      }
+
+      const cube = new THREE.Mesh(geom, materials);
+      currentMeshGroup.add(cube);
+
+      // Orbiting decorative crystal shards
+      const shardGeom = new THREE.OctahedronGeometry(0.25, 0);
+      const shardMat = new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x10b981, emissiveIntensity: 0.6 });
+      for (let i = 0; i < 4; i++) {
+        const shard = new THREE.Mesh(shardGeom, shardMat);
+        const angle = (i / 4) * Math.PI * 2;
+        shard.position.set(Math.cos(angle) * 2.3, (i % 2 === 0 ? 0.6 : -0.6), Math.sin(angle) * 2.3);
+        shard.userData = { angle, radius: 2.3, speed: 0.015 + (i * 0.005) };
+        currentMeshGroup.add(shard);
+      }
+
+      scene.add(currentMeshGroup);
+    }
+
+    function createAmbientParticles() {
+      const count = 350;
+      const geom = new THREE.BufferGeometry();
+      const positions = new Float32Array(count * 3);
+      const colors = new Float32Array(count * 3);
+
+      for (let i = 0; i < count; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 16;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 12;
+
+        const isGreen = Math.random() > 0.5;
+        colors[i * 3] = isGreen ? 0.2 : 0.1;
+        colors[i * 3 + 1] = isGreen ? 0.8 : 0.7;
+        colors[i * 3 + 2] = isGreen ? 0.5 : 0.9;
+      }
+
+      geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const mat = new THREE.PointsMaterial({
+        size: 0.08,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
+      });
+
+      particleSystem = new THREE.Points(geom, mat);
+      scene.add(particleSystem);
+    }
+
+    function burstParticles() {
+      if (!currentMeshGroup) return;
+      const count = 60;
+      const geom = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+      const velocities = [];
+
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = 0;
+        pos[i * 3 + 1] = 0;
+        pos[i * 3 + 2] = 0;
+
+        const theta = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * Math.PI;
+        const speed = 0.08 + Math.random() * 0.12;
+
+        velocities.push({
+          x: Math.cos(theta) * Math.cos(phi) * speed,
+          y: Math.sin(phi) * speed,
+          z: Math.sin(theta) * Math.cos(phi) * speed
+        });
+      }
+
+      geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({
+        size: 0.12,
+        color: 0x34d399,
+        transparent: true,
+        opacity: 1,
+        blending: THREE.AdditiveBlending
+      });
+
+      const burst = new THREE.Points(geom, mat);
+      scene.add(burst);
+
+      let frame = 0;
+      function animateBurst() {
+        frame++;
+        const pArr = burst.geometry.attributes.position.array;
+        for (let i = 0; i < count; i++) {
+          pArr[i * 3] += velocities[i].x;
+          pArr[i * 3 + 1] += velocities[i].y;
+          pArr[i * 3 + 2] += velocities[i].z;
+        }
+        burst.geometry.attributes.position.needsUpdate = true;
+        burst.material.opacity *= 0.94;
+
+        if (frame < 40) {
+          requestAnimationFrame(animateBurst);
+        } else {
+          scene.remove(burst);
+        }
+      }
+      animateBurst();
+    }
+
+    function setBlockType(type) {
+      currentBlockType = type;
+      ['grass', 'diamond', 'obsidian', 'amethyst'].forEach(b => {
+        const btn = document.getElementById(`btn-3d-${b}`);
+        if (btn) {
+          if (b === type) {
+            btn.className = "px-3 py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs transition";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold text-xs transition";
+          }
+        }
+      });
+      createVoxelBlock(type);
+      burstParticles();
+    }
+
+    function onMouseMove(e) {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      targetRotationY = mouseX * 0.8;
+      targetRotationX = -mouseY * 0.5 + 0.3;
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('webgl-canvas-container');
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
+
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    let clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const elapsedTime = clock.getElapsedTime();
+
+      // Smooth Block Rotation & Sinusoidal Bobbing
+      if (currentMeshGroup) {
+        currentMeshGroup.rotation.y += (targetRotationY - currentMeshGroup.rotation.y) * 0.05 + 0.005;
+        currentMeshGroup.rotation.x += (targetRotationX - currentMeshGroup.rotation.x) * 0.05;
+        currentMeshGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.15;
+
+        // Rotate orbiting crystal shards
+        currentMeshGroup.children.forEach(child => {
+          if (child.userData && child.userData.angle !== undefined) {
+            child.userData.angle += child.userData.speed;
+            child.position.x = Math.cos(child.userData.angle) * child.userData.radius;
+            child.position.z = Math.sin(child.userData.angle) * child.userData.radius;
+            child.rotation.x += 0.03;
+            child.rotation.y += 0.02;
+          }
+        });
+      }
+
+      // Rotate ambient stardust cloud
+      if (particleSystem) {
+        particleSystem.rotation.y = elapsedTime * 0.03;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    // Helper Toast
+    function copyIp(ip) {
+      navigator.clipboard.writeText(ip);
+      const toast = document.getElementById('toast-notify');
+      const text = document.getElementById('toast-notify-text');
+      if (toast && text) {
+        text.innerText = `Server IP "${ip}" copied to clipboard!`;
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        setTimeout(() => {
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 3000);
+      }
+    }
+
+    // Start 3D scene when DOM ready
+    window.addEventListener('DOMContentLoaded', init3DScene);
+  </script>
+</body>
+</html>
